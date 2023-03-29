@@ -8,7 +8,7 @@ public class AnimalShelterApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AnimalShelterApplication.class, args);
-        //first commentary by Nikolay (merge feature-nikolay with develop)
+        //комментарий от Маргариты
     }
 
 }
