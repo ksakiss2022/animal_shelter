@@ -8,6 +8,7 @@ public class Animal {
 
     private int age;
     private String type;
+    private boolean male;
 
     public Animal(String name, int age) {
         this.name = name;
