@@ -1,3 +1,4 @@
+
 package com.example.animal_shelter.animal_shelter.model;
 
 import javax.persistence.*;
