@@ -40,22 +40,6 @@ public class Cat {
         this.breed = breed;
     }
 
-<<<<<<< HEAD
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getYearOfBirth() {
-        return yearOfBirth;
-    }
-
-    public void setYearOfBirth(int yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
-=======
     public String getNameCat() {
         return nameCat;
     }
@@ -70,7 +54,6 @@ public class Cat {
 
     public void setYearOfBirthCat(int yearOfBirthCat) {
         this.yearOfBirthCat = yearOfBirthCat;
->>>>>>> origin/feature-svetlana
     }
 
     public String getDescription() {
@@ -80,40 +63,17 @@ public class Cat {
     public void setDescription(String description) {
         this.description = description;
     }
-<<<<<<< HEAD
-
-    @Override
-    public String toString() {
-        return "Dog{" +
-                "id=" + id +
-                ", breed='" + breed + '\'' +
-                ", name='" + name + '\'' +
-                ", yearOfBirth=" + yearOfBirth +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
-=======
->>>>>>> origin/feature-svetlana
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cat cat = (Cat) o;
-<<<<<<< HEAD
-        return id == cat.id && yearOfBirth == cat.yearOfBirth && Objects.equals(breed, cat.breed) && Objects.equals(name, cat.name);
-=======
         return yearOfBirthCat == cat.yearOfBirthCat && id.equals(cat.id) && breed.equals(cat.breed) && nameCat.equals(cat.nameCat) && description.equals(cat.description);
->>>>>>> origin/feature-svetlana
     }
 
     @Override
     public int hashCode() {
-<<<<<<< HEAD
-        return Objects.hash(id, breed, name, yearOfBirth);
-=======
         return Objects.hash(id, breed, nameCat, yearOfBirthCat, description);
->>>>>>> origin/feature-svetlana
     }
 
 }
