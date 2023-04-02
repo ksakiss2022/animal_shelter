@@ -1,20 +1,24 @@
 package com.example.animal_shelter.animal_shelter.model;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name = "person_cat")
 public class PersonCat {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
-    private int yearOfBirth;
+    @Column(name = "phone", nullable = false)
     private String phone;
+    @Column(name = "year_of_birth", nullable = false)
+    private int yearOfBirth;
+    @Column(name = "mail", nullable = false)
     private String mail;
+    @Column(name = "address", nullable = false)
     private String address;
-
+    @Column(name = "chat_id", nullable = false)
     private Long chatId;
 
 
