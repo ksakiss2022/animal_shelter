@@ -3,23 +3,23 @@ package com.example.animal_shelter.animal_shelter.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Класс для создания объекта Cat. Хранит в себе необходимые свойства данного объекта
+ * (порода, имя, год рождения, краткое описание).
+ * Реализована инкапсуляция и переопределены методы equals() и hashCode().
+ */
 @Entity
-//@Getter
-//@Setter
-//@ToString
-//@AllArgsConstructor
-//@NoArgsConstructor
-@Table(name = "cat_database")
+@Table(name = "cat")
 public class Cat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Первичный ключ. Поле для организации связи с PersonCat
     @Column(nullable = false)
     private String breed;
     @Column(name = "name_cat", nullable = false)
     private String nameCat;
-    @Column(name = "year_of_birth_cat", nullable = false)
+    @Column(name = "year_of_birth", nullable = false)
     private int yearOfBirthCat;
     @Column(name = "description", nullable = false)
     private String description;
