@@ -2,6 +2,11 @@ package com.example.animal_shelter.animal_shelter.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Класс для создания объекта PersonCat. Хранит в себе необходимые свойства данного объекта
+ * (имя, телефон, год рождения, электронная почта, адрес, id пользователя).
+ * Реализована инкапсуляция и переопределены методы equals() и hashCode().
+ */
 @Entity
 @Table(name = "person_cat")
 public class PersonCat {
@@ -19,7 +24,7 @@ public class PersonCat {
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "chat_id", nullable = false)
-    private Long chatId;
+    private Long chatId; //поле для организации связи с report
 
 
     public PersonCat() {

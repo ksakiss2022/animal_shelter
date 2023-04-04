@@ -3,6 +3,11 @@ package com.example.animal_shelter.animal_shelter.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Класс для создания объекта Dog. Хранит в себе необходимые свойства данного объекта
+ * (порода, имя, год рождения, краткое описание).
+ * Реализована инкапсуляция и переопределены методы equals() и hashCode().
+ */
 @Entity
 @Table(name = "dog")
 public class Dog {
@@ -10,7 +15,7 @@ public class Dog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // Первичный ключ. Поле для организации связи с personDog
     @Column(name = "breed", nullable = false)
     private String breedDog;
     @Column(name = "name_dog", nullable = false)
