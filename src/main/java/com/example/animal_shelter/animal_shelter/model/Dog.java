@@ -4,14 +4,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "dog_database")
+@Table(name = "dog")
 public class Dog {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(name = "breed", nullable = false)
     private String breedDog;
     @Column(name = "name_dog", nullable = false)
     private String nameDog;
