@@ -31,6 +31,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     @Override
+    /**
+     * Обрабатывает данные или команды, вводимые пользователем в Телеграм-боте
+     * Если вводится "start", то выводится Приветствие и список команд для выбора
+     * Если пользователь нажал на кнопку, то выводятся или дополнительные команды или какая-нибудь информация
+     */
     public int process(List<Update> updates) {
 
         //Храним поддерживаемые CallBackQuery в виде констант
@@ -52,10 +57,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     CallbackQuery callbackQuery = update.callbackQuery();
                     String data = callbackQuery.data();
                     switch (data) {
-                        case SHELTER_INFORMATION:
+
+                        case SHELTER_INFORMATION://действия для кнопки "Узнать информацию о приюте"
+                            //выводимое сообщение
                            SendMessage sendMessage1 = new SendMessage(chatId.toString(), "Что Вы хотите узнать о приюте?");
                             sendMessage1.parseMode(ParseMode.Markdown);
-
+                            //выводится список кнопок для выбора
                             InlineKeyboardButton button11 = new InlineKeyboardButton("Рассказать о приюте");
                             button11.callbackData(SHELTER_TELL);
                             InlineKeyboardButton button12 = new InlineKeyboardButton("Расписание работы приюта и адрес, схема проезда");
@@ -78,15 +85,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             sendMessage1.replyMarkup(keyboard2);
                             telegramBot.execute(sendMessage1);
                             break;
-                        case ADOPT_DOC_FROM_SHELTER:
+                        case ADOPT_DOC_FROM_SHELTER: //действия для кнопки "Как взять собаку из приюта"
                             SendMessage sendMessage2 = new SendMessage(chatId, "Нажата кнопка Как взять собаку из приюта");
                             telegramBot.execute(sendMessage2);
                             break;
-                        case SEND_PET_REPORT:
+                        case SEND_PET_REPORT: //действия для кнопки "Прислать отчет о питомце"
                             SendMessage sendMessage3 = new SendMessage(chatId, "Нажата кнопка Прислать отчет о питомце");
                             telegramBot.execute(sendMessage3);
                             break;
-                        case CALL_VOLUNTEER:
+                        case CALL_VOLUNTEER: //действия для кнопки "Позвать волонтера"
                             SendMessage sendMessage4 = new SendMessage(chatId, "Нажата кнопка Позвать волонтера");
                             telegramBot.execute(sendMessage4);
                             break;
@@ -96,14 +103,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                 User user = update.message().from();
                 String text = update.message().text();
-                if ("/start".equals(text)) {
+                if ("/start".equals(text)) { // Если пользователь ввел "/start", то выводится Приветствие и список кнопок для дальнейшей работы
                     SendMessage sendMessage = new SendMessage(user.id(),
                             "Привет!\n Меня создали Коробейникова Светлана, Салимгареева Маргарита и Кулаков Николай.\n " +
                                     "Они проходят обучение по курсу Java - разработчик. " +
                                     "\n Я буду многофункциональным ботом, отвечающим за приюты собак и кошек \n " +
                                     "Но пока ещё я мало что умею делать :-)");
                     sendMessage.parseMode(ParseMode.Markdown);
-
+                    //выводится список кнопок для выбора
                     InlineKeyboardButton button1 = new InlineKeyboardButton("Узнать информацию о приюте");
                     button1.callbackData(SHELTER_INFORMATION);
                     InlineKeyboardButton button2 = new InlineKeyboardButton("Как взять собаку из приюта");
