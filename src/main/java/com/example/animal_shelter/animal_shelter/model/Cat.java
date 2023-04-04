@@ -9,7 +9,7 @@ import java.util.Objects;
 //@ToString
 //@AllArgsConstructor
 //@NoArgsConstructor
-@Table(name = "cat_database")
+@Table(name = "cat")
 public class Cat {
 
     @Id
@@ -19,7 +19,7 @@ public class Cat {
     private String breed;
     @Column(name = "name_cat", nullable = false)
     private String nameCat;
-    @Column(name = "year_of_birth_cat", nullable = false)
+    @Column(name = "year_of_birth", nullable = false)
     private int yearOfBirthCat;
     @Column(name = "description", nullable = false)
     private String description;
