@@ -2,6 +2,7 @@ package com.example.animal_shelter.animal_shelter.controller;
 
 import com.example.animal_shelter.animal_shelter.model.Dog;
 import com.example.animal_shelter.animal_shelter.service.DogService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -68,6 +69,30 @@ public class DogController {
     public ResponseEntity deleteDog(@PathVariable Long id) {
         dogService.deleteDog(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Поиск собак по кличке, породе , и вывод списка всех собак ",
+                    content = @Content(
+                            schema = @Schema(implementation = Dog[].class),
+                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                    )
+            )
+    })
+    @GetMapping //GET http://localhost:8080/dogs
+    public ResponseEntity findDog(@Parameter(description =
+            "Кличка собаки, часть клички, прописными или заглавными буквами",
+            example = "пример заполнение: дЖЕк")@RequestParam(required = false, name = "Кличка питомца") String nameDog,
+                                  @RequestParam(required = false, name = "Порода собаки, к примеру РОТвейлеР") String breedDog) {
+        if (nameDog != null && !nameDog.isBlank()) {
+            return ResponseEntity.ok(dogService.findDodByNameDog(nameDog));
+        }
+        if (breedDog != null && !breedDog.isBlank()) {
+            return ResponseEntity.ok(dogService.findDodByBreed(breedDog));
+        }
+        return ResponseEntity.ok(dogService.getAllDogs());
     }
 
 }

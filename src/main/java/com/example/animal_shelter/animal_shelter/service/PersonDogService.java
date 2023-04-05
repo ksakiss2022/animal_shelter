@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
  * <b>Сервис PersonDogService предназначен для обработки данных о владельца или
  * потенциальрных владельцах собак</b>.
@@ -56,5 +58,43 @@ public class PersonDogService {
     public void deletePersonDog(long id) {
         logger.debug("Delete personDog:{}", id);
         personDogRepository.deleteById(id);
+    }
+
+    /**
+     * Метод getAllParsonsDogs выводит список обо всех <b> хозяевах собак</b> внесенных в базу данных.
+     *
+     * @return найденные <b>хозяева собак</b>.
+     */
+    public Collection<PersonDog> getAllParsonsDogs() {
+        logger.debug("Collection all persons dogs:{}");
+        final var all = personDogRepository.findAll();
+        logger.debug("All persons dogs is{}", all);
+        return all;
+    }
+
+    /**
+     * Метод findPersonsDogByNamePersons ищет хозяев собак по имени хозяина.
+     *
+     * @param name параметр со значением данных <b>имя хозяина собаки</b>.
+     * @return найденные <b>именя хозяев собак</b>.
+     */
+    public Collection<PersonDog> findPersonsDogByNamePersons(String name) {
+        logger.debug("Find persons dog by breed:{}", name);
+        final var findPersonDogByNameContainsIgnoreCase = personDogRepository.findPersonDogByNameContainsIgnoreCase(name);
+        logger.debug("Persons dog by breed is{}", findPersonDogByNameContainsIgnoreCase);
+        return findPersonDogByNameContainsIgnoreCase;
+    }
+
+    /**
+     * Метод findPersonsDogByMail ищет хозяев собак по адресу mail.
+     *
+     * @param mail параметр со значением данных <b>@mail</b>.
+     * @return найденные <b>хозяева собак по @mail]</b>.
+     */
+    public PersonDog findPersonsDogByMail(String mail) {
+        logger.debug("Find persons dog by mail:{}", mail);
+        final var findPersonDogByMailContainsIgnoreCase = personDogRepository.findPersonDogByMailContainsIgnoreCase(mail);
+        logger.debug("Persons cats by mail is{}", findPersonDogByMailContainsIgnoreCase);
+        return findPersonDogByMailContainsIgnoreCase;
     }
 }

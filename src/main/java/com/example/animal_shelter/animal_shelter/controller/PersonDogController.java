@@ -1,8 +1,10 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 
+import com.example.animal_shelter.animal_shelter.model.PersonCat;
 import com.example.animal_shelter.animal_shelter.model.PersonDog;
 import com.example.animal_shelter.animal_shelter.service.PersonDogService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -71,5 +73,29 @@ public class PersonDogController {
     public ResponseEntity deletePersonDog(@PathVariable Long id) {
         personDogService.deletePersonDog(id);
         return ResponseEntity.ok().build();
+    }
+
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Поиск хозяев собак по имени хозяина, @mail, вывод списка всех хозяев",
+                    content = @Content(
+                            schema = @Schema(implementation = PersonCat[].class),
+                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                    )
+            )
+    })
+    @GetMapping //GET http://localhost:8080/person_dogs
+    public ResponseEntity findPersonsDogs(@Parameter(description =
+            "Имя хозяина собаки, часть имени, прописными или заглавными буквами",
+            example = "пример заполнение: Короленко") @RequestParam(required = false, name = "Имя хозяина питомца") String name,
+                                          @RequestParam(required = false, name = "@mail, к примеру vaska@mail.ru") String mail) {
+        if (name != null && !name.isBlank()) {
+            return ResponseEntity.ok(personDogService.findPersonsDogByNamePersons(name));
+        }
+        if (mail != null && !mail.isBlank()) {
+            return ResponseEntity.ok(personDogService.findPersonsDogByMail(mail));
+        }
+        return ResponseEntity.ok(personDogService.getAllParsonsDogs());
     }
 }
