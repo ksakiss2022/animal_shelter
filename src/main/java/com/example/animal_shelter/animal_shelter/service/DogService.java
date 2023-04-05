@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
  * <b>Сервис DogService предназначен для обработки данных о собаках</b>.
  * Данный класс содержит методы добавления, изменения , удаления собак в базе данных.
@@ -55,5 +57,44 @@ public class DogService {
     public void deleteDog(long id) {
         logger.debug("Delete dog:{}", id);
         dogRepository.deleteById(id);
+    }
+
+
+    /**
+     * Метод getAllDogs выводит список обо всех <b>собаках</b> внесенных в базу данных.
+     *
+     * @return найденные <b>собаки</b>.
+     */
+    public Collection<Dog> getAllDogs() {
+        logger.debug("Collection all dogs:{}");
+        final var all = dogRepository.findAll();
+        logger.debug("All dogs is{}", all);
+        return all;
+    }
+
+    /**
+     * Метод findDodByBreed ищет собак по породе.
+     *
+     * @param breedDog параметр со значением данных <b>порода собак</b>.
+     * @return найденные <b>породы собак</b>.
+     */
+    public Collection<Dog> findDodByBreed(String breedDog) {
+        logger.debug("Find dog by breed:{}", breedDog);
+        final var findDogByBreedDogContainsIgnoreCase = dogRepository.findDogByBreedDogContainsIgnoreCase(breedDog);
+        logger.debug("Cat by breed is{}", findDogByBreedDogContainsIgnoreCase);
+        return findDogByBreedDogContainsIgnoreCase;
+    }
+
+    /**
+     * Метод findCatByNameCat ищет кошек по кличке кошки.
+     *
+     * @param nameDog параметр со значением данных <b>кличка кошки</b>.
+     * @return найденные <b>кошки по кличке</b>.
+     */
+    public Dog findDodByNameDog(String nameDog) {
+        logger.debug("Find Dog by nameDog:{}", nameDog);
+        final var findDogByNameDogContainsIgnoreCase = dogRepository.findDogByNameDogContainsIgnoreCase(nameDog);
+        logger.debug("Dog by nameDog is{}", findDogByNameDogContainsIgnoreCase);
+        return findDogByNameDogContainsIgnoreCase;
     }
 }
