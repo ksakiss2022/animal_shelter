@@ -1,5 +1,6 @@
 package com.example.animal_shelter.animal_shelter.service;
 
+import com.example.animal_shelter.animal_shelter.model.Dog;
 import com.example.animal_shelter.animal_shelter.model.PersonCat;
 import com.example.animal_shelter.animal_shelter.repository.PersonCatRepository;
 import org.slf4j.Logger;
@@ -43,9 +44,14 @@ public class PersonCatService {
      */
     public PersonCat editPersonCat(PersonCat personCat) {
         logger.debug("Edit personCat:{}", personCat);
+        if (personCatRepository.findById(personCat.getId()).isPresent()) {
         final var personCat1 = personCatRepository.save(personCat);
         logger.debug("PersonCat (edit) is{}", personCat1);
         return personCat1;
+        } else {
+            logger.debug("No person cat found with id {}", personCat.getId());
+            return null;
+        }
     }
 
     /**

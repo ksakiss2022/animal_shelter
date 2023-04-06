@@ -43,11 +43,15 @@ public class CatService {
      */
     public Cat editCat(Cat cat) {
         logger.debug("Edit cat:{}", cat);
-        final var cat1 = catRepository.save(cat);
-        logger.debug("Cat (edit) is{}", cat1);
-        return cat1;
+        if(catRepository.findById(cat.getId()).isPresent()) {
+            final var cat1 = catRepository.save(cat);
+            logger.debug("Cat (edit) is{}", cat1);
+            return cat1;
+        } else {
+            logger.debug("No cat found with id {}", cat.getId());
+            return null;
+        }
     }
-
     /**
      * Метод deleteCat удаляет из базы данных ранее внесенную информацию о <b>кошках</b> в базу данных.
      *

@@ -1,15 +1,15 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 
-import com.example.animal_shelter.animal_shelter.model.PersonCat;
 import com.example.animal_shelter.animal_shelter.model.PersonDog;
 import com.example.animal_shelter.animal_shelter.service.PersonDogService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,63 +28,78 @@ public class PersonDogController {
         this.personDogService = personDogService;
     }
 
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Вносим информацию о новом владельце собаки " +
-                            "пример вносимой информации:.......... ",
-                    content = @Content(
-                            schema = @Schema(implementation = PersonDog[].class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+    @Operation(
+            summary = "Вносим информацию о новом владельце собаки.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Новый владельц собаки.",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = PersonDog.class))
+                            )
                     )
-            )
-    })
+            },
+            tags = "Person Dog"
+    )
     @PostMapping //POST http://localhost:8080/person_dogs
     public PersonDog createPersonDog(@RequestBody PersonDog personDog) {
         return personDogService.createPersonDog(personDog);
     }
 
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Изменяе ранее внесенную информацию о владельце собаки ",
-                    content = @Content(
-                            schema = @Schema(implementation = PersonDog[].class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+    @Operation(
+            summary = "Изменяем ранее внесенную информацию о владельце собаки.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Измененная информация о владельце собаки. ",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = PersonDog.class))
+                            )
                     )
-            )
-    })
+            },
+            tags = "Person Dog"
+    )
     @PutMapping //PUT http://localhost:8080/person_dogs
     public PersonDog editPersonDog(@RequestBody PersonDog personDog) {
         return personDogService.editPersonDog(personDog);
     }
 
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Удаляем ранее внесенную информацию о владельце собаки ",
-                    content = @Content(
-                            schema = @Schema(implementation = PersonDog[].class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+    @Operation(
+            summary = "Удаляем ранее внесенную информацию о владельце собаки.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Удаленная информацию о владельце собаки.",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = PersonDog.class))
+                            )
                     )
-            )
-    })
+            },
+            tags = "Person Dog"
+    )
     @DeleteMapping("{id}") //DELETE http://localhost:8080/person_dogs/3
     public ResponseEntity deletePersonDog(@PathVariable Long id) {
         personDogService.deletePersonDog(id);
         return ResponseEntity.ok().build();
     }
 
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Поиск хозяев собак по имени хозяина, @mail, вывод списка всех хозяев",
-                    content = @Content(
-                            schema = @Schema(implementation = PersonCat[].class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+    @Operation(
+            summary = "Поиск хозяев собак по имени хозяина, @mail, вывод списка всех хозяев.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Найденные хозяева собак.",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = PersonDog.class))
+                            )
                     )
-            )
-    })
+            },
+            tags = "Person Dog"
+    )
     @GetMapping //GET http://localhost:8080/person_dogs
     public ResponseEntity findPersonsDogs(@Parameter(description =
             "Имя хозяина собаки, часть имени, прописными или заглавными буквами",
