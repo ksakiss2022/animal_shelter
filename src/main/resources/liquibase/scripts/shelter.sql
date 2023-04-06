@@ -56,11 +56,11 @@ ALTER TABLE person_dog
 ALTER TABLE person_cat
     ADD cat_id BIGINT NOT NULL UNIQUE;
 
-ALTER TABLE dog
-    ADD FOREIGN KEY (id) REFERENCES person_dog (dog_id);
+ALTER TABLE person_dog
+    ADD FOREIGN KEY (dog_id) REFERENCES dog (id);
 
-ALTER TABLE cat
-    ADD FOREIGN KEY (id) REFERENCES person_cat (cat_id);
+ALTER TABLE person_cat
+    ADD FOREIGN KEY (cat_id) REFERENCES cat (id);
 
 
 
