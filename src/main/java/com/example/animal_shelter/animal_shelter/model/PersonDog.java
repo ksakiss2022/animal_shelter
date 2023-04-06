@@ -1,5 +1,7 @@
 package com.example.animal_shelter.animal_shelter.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,7 +16,7 @@ import java.util.Objects;
 public class PersonDog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //поле для организации связи с report
     @Column(nullable = false)
     private String name;
 
@@ -27,7 +29,12 @@ public class PersonDog {
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "chat_id", nullable = false)
-    private Long chatId; //поле для организации связи с report
+    private Long chatId;
+
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dog_id")
+    private Dog dog;
 
     public PersonDog() {
     }

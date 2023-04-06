@@ -11,8 +11,8 @@ create table if not exists cat
     description   TEXT            NOT NULL
 );
 
--- changeset skorobeynikova:2
 
+-- changeset skorobeynikova:2
 
 CREATE SCHEMA IF NOT EXISTS dog;
 CREATE TABLE IF NOT EXISTS dog
@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS dog
     name_dog          TEXT NOT NULL,
     year_of_birth_dog INT  NOT NULL,
     description       TEXT NOT NULL
-
 );
+
 
 CREATE SCHEMA IF NOT EXISTS person_cat;
 CREATE TABLE IF NOT EXISTS person_cat
@@ -48,6 +48,25 @@ CREATE TABLE IF NOT EXISTS person_dog
     address       TEXT   NOT NULL,
     chat_id       BIGINT NOT NULL
 );
+
+-- changeset lumlum:3
+ALTER TABLE person_dog
+    ADD dog_id BIGINT NOT NULL UNIQUE;
+
+ALTER TABLE person_cat
+    ADD cat_id BIGINT NOT NULL UNIQUE;
+
+ALTER TABLE dog
+    ADD FOREIGN KEY (id) REFERENCES person_dog (dog_id);
+
+ALTER TABLE cat
+    ADD FOREIGN KEY (id) REFERENCES person_cat (cat_id);
+
+
+
+
+
+
 
 
 
