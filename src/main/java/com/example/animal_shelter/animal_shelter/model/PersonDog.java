@@ -36,6 +36,20 @@ public class PersonDog {
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
+    @OneToOne(orphanRemoval = true)
+    @JoinTable(name = "person_dog_report",
+            joinColumns = @JoinColumn(name = "person_dog"),
+            inverseJoinColumns = @JoinColumn(name = "report_id"))
+    private Report report;
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
+
     public PersonDog() {
     }
 
@@ -61,12 +75,12 @@ public class PersonDog {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonDog personDog = (PersonDog) o;
-        return id == personDog.id && yearOfBirth == personDog.yearOfBirth && phone == personDog.phone && Objects.equals(name, personDog.name) && Objects.equals(mail, personDog.mail) && Objects.equals(address, personDog.address);
+        return yearOfBirth == personDog.yearOfBirth && Objects.equals(id, personDog.id) && Objects.equals(name, personDog.name) && Objects.equals(phone, personDog.phone) && Objects.equals(mail, personDog.mail) && Objects.equals(address, personDog.address) && Objects.equals(chatId, personDog.chatId) && Objects.equals(dog, personDog.dog) && Objects.equals(report, personDog.report);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, yearOfBirth, phone, mail, address);
+        return Objects.hash(id, name, phone, yearOfBirth, mail, address, chatId, dog, report);
     }
 
     @Override

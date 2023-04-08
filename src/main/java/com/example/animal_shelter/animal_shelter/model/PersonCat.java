@@ -1,4 +1,5 @@
 package com.example.animal_shelter.animal_shelter.model;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
@@ -33,6 +34,21 @@ public class PersonCat {
     @JoinColumn(name = "cat_id")
     private Cat cat;
 
+
+    @OneToOne(orphanRemoval = true)
+    @JoinTable(name = "person_cat_report",
+            joinColumns = @JoinColumn(name = "person_cat"),
+            inverseJoinColumns = @JoinColumn(name = "report_id"))
+    private Report report;
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
+
     public PersonCat() {
     }
 
@@ -58,12 +74,12 @@ public class PersonCat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonCat personCat = (PersonCat) o;
-        return id == personCat.id && yearOfBirth == personCat.yearOfBirth && phone == personCat.phone && Objects.equals(name, personCat.name) && Objects.equals(mail, personCat.mail) && Objects.equals(address, personCat.address);
+        return yearOfBirth == personCat.yearOfBirth && Objects.equals(id, personCat.id) && Objects.equals(name, personCat.name) && Objects.equals(phone, personCat.phone) && Objects.equals(mail, personCat.mail) && Objects.equals(address, personCat.address) && Objects.equals(chatId, personCat.chatId) && Objects.equals(cat, personCat.cat) && Objects.equals(report, personCat.report);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, yearOfBirth, phone, mail, address);
+        return Objects.hash(id, name, phone, yearOfBirth, mail, address, chatId, cat, report);
     }
 
     @Override

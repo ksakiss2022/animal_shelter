@@ -122,6 +122,61 @@ INSERT INTO person_dog (id, name, phone, year_of_birth, mail, address, chat_id, 
     (3, 'Николай Кулаков', '+79077777777', 1991, 'n.kulakov@yandex.ru', 'Россия', 7777777, 6),
     (4, 'Григорий Каляшов', '+7909999999', 1990, 'g.kalyashov@yandex.ru', 'Швеция', 9999999, 4);
 
+-- changeset kulakov: 7
+
+CREATE SCHEMA IF NOT EXISTS report;
+CREATE TABLE IF NOT EXISTS report
+(
+    id              BIGINT PRIMARY KEY NOT NULL,
+    chat_id         BIGINT             NOT NULL,
+    ration          TEXT               NOT NULL,
+    health          TEXT               NOT NULL,
+    habits          TEXT               NOT NULL,
+    days            BIGINT             NOT NULL,
+    file_path       TEXT               NOT NULL,
+    file_size       BIGINT             NOT NULL,
+    data            BYTEA              NOT NULL,
+    caption         TEXT               NOT NULL,
+    last_message    TIMESTAMP          NOT NULL,
+    last_message_ms BIGINT             NOT NULL,
+    person_id       BIGINT             NOT NULL
+);
+
+ALTER TABLE report
+    ADD FOREIGN KEY (person_id) REFERENCES person_cat (id);
+
+ALTER TABLE report
+    ADD FOREIGN KEY (person_id) REFERENCES person_dog (id);
+
+-- changeset kulakov: 8
+
+CREATE SCHEMA IF NOT EXISTS person_cat_report;
+CREATE TABLE IF NOT EXISTS person_cat_report
+(
+    person_cat              BIGINT PRIMARY KEY NOT NULL,
+    report_id               BIGINT NOT NULL
+);
+
+CREATE SCHEMA IF NOT EXISTS person_dog_report;
+CREATE TABLE IF NOT EXISTS person_dog_report
+(
+    person_dog              BIGINT PRIMARY KEY NOT NULL,
+    report_id               BIGINT NOT NULL
+);
+
+ALTER TABLE person_cat_report
+    ADD FOREIGN KEY (report_id) REFERENCES report (id);
+
+ALTER TABLE person_dog_report
+    ADD FOREIGN KEY (report_id) REFERENCES report (id);
+
+ALTER TABLE person_cat_report
+    ADD FOREIGN KEY (person_cat) REFERENCES cat (id);
+
+ALTER TABLE person_dog_report
+    ADD FOREIGN KEY (person_dog) REFERENCES dog (id);
+
+
 
 
 
