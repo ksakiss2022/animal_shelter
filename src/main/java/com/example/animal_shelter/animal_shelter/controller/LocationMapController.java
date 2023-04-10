@@ -3,6 +3,8 @@ package com.example.animal_shelter.animal_shelter.controller;
 import com.example.animal_shelter.animal_shelter.model.LocationMap;
 import com.example.animal_shelter.animal_shelter.model.Shelter;
 import com.example.animal_shelter.animal_shelter.service.LocationMapService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,16 +40,18 @@ public class LocationMapController {
         this.locationMapService = locationMapService;
     }
 
-    @ApiResponses({
+    @Operation(
+            summary = "Вносим информацию о новой схеме проезда",
+            responses = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Загружаем файл ",
+                    description = "Внесенная информация о схеме проезда",
                     content = @Content(
-                            schema = @Schema(implementation = LocationMap.class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = LocationMap.class))
                     )
             )
-    })
+    }, tags = "Location Maps")
 
     @PostMapping( value ="{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //POST http://localhost:8080/location_maps
     public ResponseEntity<String> uploadlocationMap(@PathVariable Long id, @RequestParam MultipartFile locationMap) throws IOException {
@@ -59,15 +63,17 @@ public class LocationMapController {
     }
 
 
-    @ApiResponses({
+    @Operation(
+            summary = "Получаем все схемы проезда",
+            responses = {
             @ApiResponse(
-                    description = "Получаем все файлы ",
+                    description = "Схемы проезда",
                     content = @Content(
-                            schema = @Schema(implementation = LocationMap.class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = LocationMap.class))
                     )
             )
-    })
+    }, tags = "Location Maps")
     @GetMapping()//GET http://localhost:8080/location_maps
     public ResponseEntity<List<LocationMap>> getAllLocationMaps(@RequestParam("page") Integer pageNumber,
                                                            @RequestParam("size") Integer pageSize) {
@@ -75,15 +81,17 @@ public class LocationMapController {
         return ResponseEntity.ok(locationMapList);
     }
 
-    @ApiResponses({
+    @Operation(
+            summary = "Получаем схему проезда",
+            responses = {
             @ApiResponse(
-                    description = "Получаем все файлы ",
+                    description = "Схему проезда",
                     content = @Content(
-                            schema = @Schema(implementation = LocationMap.class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = LocationMap.class))
                     )
             )
-    })
+    }, tags = "Location Maps")
     @GetMapping("{id}") //GET http://localhost:8080/location_maps/3
     public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException{
         LocationMap locationMap = locationMapService.findLocationMap(id);
@@ -107,16 +115,18 @@ public class LocationMapController {
 //        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(locationMap.getData());
 //    }
 
-    @ApiResponses({
+    @Operation(
+            summary = "Удаляем ранее внесенную схему проезда",
+            responses = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Удаляем ранее внесенную информацию о схеме данных ",
+                    description = "Результат удаления схемы проезда",
                     content = @Content(
-                            schema = @Schema(implementation = Shelter[].class),
-                            examples = @ExampleObject(externalValue = ".......допишем позже")
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = LocationMap.class))
                     )
             )
-    })
+    }, tags = "Location Maps")
     @DeleteMapping("{id}") //DELETE http://localhost:8080/location_maps/3
     public ResponseEntity deleteLocationMap(@PathVariable Long id) {
         locationMapService.deleteLocationMap(id);

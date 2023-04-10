@@ -71,7 +71,11 @@ public class ShelterService {
         logger.debug("All persons Shelters are{}", all);
         return all;
     }
-
+    /**
+     * Метод findShelter получает найденный <b> приют</b> внесенный в базу данных.
+     *
+     * @return найденный <b>приют</b>.
+     */
     public Shelter findShelter(long id) {
         logger.debug("find Shelter by id");
         return shelterRepository.findById(id).get();
