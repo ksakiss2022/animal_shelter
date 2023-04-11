@@ -1,6 +1,5 @@
-package com.example.animal_shelter.animal_shelter;
+package com.example.animal_shelter.animal_shelter.controller;
 
-import com.example.animal_shelter.animal_shelter.controller.ShelterController;
 import com.example.animal_shelter.animal_shelter.model.Shelter;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.example.animal_shelter.animal_shelter.service.ShelterService;
@@ -17,13 +16,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ShelterController.class)
-public class ShelterTest {
+class ShelterControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -34,8 +34,9 @@ public class ShelterTest {
 
     @InjectMocks
     private ShelterController shelterController;
+
     @Test
-    public void testShelterController() throws Exception {
+    void createShelter() throws Exception {
 
         final String name = "Приют 123";
         final String information = "Тестовый приют для собак";
@@ -64,7 +65,24 @@ public class ShelterTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value(name));
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.information").value(information))
+                .andExpect(jsonPath("$.schedule").value(schedule))
+                .andExpect(jsonPath("$.address").value(address))
+                .andExpect(jsonPath("$.safetyRecommendations").value(safetyRecommendations))
+        ;
     }
 
+
+    @Test
+    void editShelter() {
+
+
+    }
+
+    @Test
+    void deleteShelter() {
+
+
+    }
 }
