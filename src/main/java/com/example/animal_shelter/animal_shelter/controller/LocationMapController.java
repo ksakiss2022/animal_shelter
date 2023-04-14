@@ -1,7 +1,6 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 import com.example.animal_shelter.animal_shelter.model.LocationMap;
-import com.example.animal_shelter.animal_shelter.model.Shelter;
 import com.example.animal_shelter.animal_shelter.service.LocationMapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -54,7 +53,7 @@ public class LocationMapController {
     }, tags = "Location Maps")
 
     @PostMapping( value ="{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //POST http://localhost:8080/location_maps
-    public ResponseEntity<String> uploadlocationMap(@PathVariable Long id, @RequestParam MultipartFile locationMap) throws IOException {
+    public ResponseEntity<String> uploadLocationMap(@PathVariable Long id, @RequestParam MultipartFile locationMap) throws IOException {
         if(locationMap.getSize()>=1024*300){
             return ResponseEntity.badRequest().body("File is too big");
         }
@@ -93,7 +92,7 @@ public class LocationMapController {
             )
     }, tags = "Location Maps")
     @GetMapping("{id}") //GET http://localhost:8080/location_maps/3
-    public void downloadAvatar(@PathVariable Long id, HttpServletResponse response) throws IOException{
+    public void downloadLocationMap(@PathVariable Long id, HttpServletResponse response) throws IOException{
         LocationMap locationMap = locationMapService.findLocationMap(id);
         Path path = Path.of(locationMap.getFilePath());
         try(InputStream is = Files.newInputStream(path);

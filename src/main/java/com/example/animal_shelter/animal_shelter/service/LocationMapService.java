@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @Transactional
 public class LocationMapService {
-    @Value("lovationMaps")
+    @Value("locationMaps")
     private String locationMapDir;
 
         private ShelterService shelterService;
