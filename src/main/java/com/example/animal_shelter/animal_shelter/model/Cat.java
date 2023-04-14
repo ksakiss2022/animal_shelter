@@ -37,6 +37,15 @@ public class Cat {
         this.description = description;
     }
 
+
+
+    public Cat(String breed, String nameCat, int yearOfBirthCat, String description) {
+        this.breed = breed;
+        this.nameCat = nameCat;
+        this.yearOfBirthCat = yearOfBirthCat;
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }
@@ -89,4 +98,14 @@ public class Cat {
         return Objects.hash(id, breed, nameCat, yearOfBirthCat, description);
     }
 
+    @Override
+    public String toString() {
+        return "Cat{" +
+                "id=" + id +
+                ", breed='" + breed + '\'' +
+                ", nameCat='" + nameCat + '\'' +
+                ", yearOfBirthCat=" + yearOfBirthCat +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

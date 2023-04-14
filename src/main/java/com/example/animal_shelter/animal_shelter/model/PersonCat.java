@@ -13,6 +13,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "person_cat")
 public class PersonCat {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //поле для организации связи с report

@@ -208,12 +208,3 @@ CREATE TABLE IF NOT EXISTS bot_user
 
 
 );
-
-
-
-
-
-
-
-
-

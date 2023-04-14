@@ -1,16 +1,14 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
-import com.example.animal_shelter.animal_shelter.model.Cat;
+
 import com.example.animal_shelter.animal_shelter.model.Dog;
 import com.example.animal_shelter.animal_shelter.service.DogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
