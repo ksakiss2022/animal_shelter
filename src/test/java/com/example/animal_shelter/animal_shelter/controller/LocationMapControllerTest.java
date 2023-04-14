@@ -9,7 +9,6 @@ import com.example.animal_shelter.animal_shelter.service.ShelterService;
 import org.assertj.core.api.Assertions;
 import org.hibernate.mapping.Any;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
