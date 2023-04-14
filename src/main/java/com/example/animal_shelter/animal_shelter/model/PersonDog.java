@@ -1,5 +1,7 @@
 package com.example.animal_shelter.animal_shelter.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -14,7 +16,7 @@ import java.util.Objects;
 public class PersonDog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //поле для организации связи с report
     @Column(nullable = false)
     private String name;
 
@@ -27,7 +29,26 @@ public class PersonDog {
     @Column(name = "address", nullable = false)
     private String address;
     @Column(name = "chat_id", nullable = false)
-    private Long chatId; //поле для организации связи с report
+    private Long chatId;
+
+    @JsonBackReference
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "dog_id")
+    private Dog dog;
+
+    @OneToOne(orphanRemoval = true)
+    @JoinTable(name = "person_dog_report",
+            joinColumns = @JoinColumn(name = "person_dog"),
+            inverseJoinColumns = @JoinColumn(name = "report_id"))
+    private Report report;
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
 
     public PersonDog() {
     }
@@ -54,12 +75,12 @@ public class PersonDog {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonDog personDog = (PersonDog) o;
-        return id == personDog.id && yearOfBirth == personDog.yearOfBirth && phone == personDog.phone && Objects.equals(name, personDog.name) && Objects.equals(mail, personDog.mail) && Objects.equals(address, personDog.address);
+        return yearOfBirth == personDog.yearOfBirth && Objects.equals(id, personDog.id) && Objects.equals(name, personDog.name) && Objects.equals(phone, personDog.phone) && Objects.equals(mail, personDog.mail) && Objects.equals(address, personDog.address) && Objects.equals(chatId, personDog.chatId) && Objects.equals(dog, personDog.dog) && Objects.equals(report, personDog.report);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, yearOfBirth, phone, mail, address);
+        return Objects.hash(id, name, phone, yearOfBirth, mail, address, chatId, dog, report);
     }
 
     @Override

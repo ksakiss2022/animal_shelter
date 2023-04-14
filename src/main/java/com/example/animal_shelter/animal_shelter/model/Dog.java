@@ -12,7 +12,6 @@ import java.util.Objects;
 @Table(name = "dog")
 public class Dog {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Первичный ключ. Поле для организации связи с personDog
@@ -26,6 +25,17 @@ public class Dog {
     @Column(name = "description", nullable = false)
     private String description;
 
+    public Dog() {
+
+    }
+
+    public Dog(Long id, String breedDog, String nameDog, int yearOfBirthDog, String description) {
+        this.id = id;
+        this.breedDog = breedDog;
+        this.nameDog = nameDog;
+        this.yearOfBirthDog = yearOfBirthDog;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -80,4 +90,14 @@ public class Dog {
         return Objects.hash(id, breedDog, nameDog, yearOfBirthDog, description);
     }
 
+    @Override
+    public String toString() {
+        return "Dog{" +
+                "id=" + id +
+                ", breedDog='" + breedDog + '\'' +
+                ", nameDog='" + nameDog + '\'' +
+                ", yearOfBirthDog=" + yearOfBirthDog +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

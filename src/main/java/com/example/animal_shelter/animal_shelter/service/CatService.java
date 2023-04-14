@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
  * <b>Сервис CatService предназначен для обработки данных о кошка</b>.
  * Данный класс содержит методы добавления, изменения , удаления кошек в базе данных.
@@ -41,11 +43,15 @@ public class CatService {
      */
     public Cat editCat(Cat cat) {
         logger.debug("Edit cat:{}", cat);
-        final var cat1 = catRepository.save(cat);
-        logger.debug("Cat (edit) is{}", cat1);
-        return cat1;
+        if(catRepository.findById(cat.getId()).isPresent()) {
+            final var cat1 = catRepository.save(cat);
+            logger.debug("Cat (edit) is{}", cat1);
+            return cat1;
+        } else {
+            logger.debug("No cat found with id {}", cat.getId());
+            return null;
+        }
     }
-
     /**
      * Метод deleteCat удаляет из базы данных ранее внесенную информацию о <b>кошках</b> в базу данных.
      *
@@ -55,4 +61,40 @@ public class CatService {
         logger.debug("Delete cat:{}", id);
         catRepository.deleteById(id);
     }
+
+    /**
+     * Метод getAllCats выводит список обо всех <b>кошках</b> внесенных в базу данных.
+     * @return найденные <b>кошки</b>.
+     */
+    public Collection<Cat> getAllCats() {
+        logger.debug("Collection all cats:{}");
+        final var all = catRepository.findAll();
+        logger.debug("All cats is{}", all);
+        return all;
+    }
+
+    /**
+     * Метод findCatByBreed ищет кошек по породе.
+     * @param breed параметр со значением данных <b>порода кошки</b>.
+     * @return найденные <b>породы кошек</b>.
+     */
+    public Collection<Cat> findCatByBreed(String breed) {
+        logger.debug("Find cat by breed:{}",breed);
+        final var findCatByBreedContainsIgnoreCase = catRepository.findCatByBreedContainsIgnoreCase(breed);
+        logger.debug("Cat by breed is{}", findCatByBreedContainsIgnoreCase);
+        return findCatByBreedContainsIgnoreCase;
+    }
+
+    /**
+     * Метод findCatByNameCat ищет кошек по кличке кошки.
+     * @param nameCat параметр со значением данных <b>кличка кошки</b>.
+     * @return найденные <b>кошки по кличке</b>.
+     */
+    public Cat findCatByNameCat(String nameCat) {
+        logger.debug("Find Cat by nameCat:{}",nameCat);
+        final var findCatByNameCatContainsIgnoreCase = catRepository.findCatByNameCatContainsIgnoreCase(nameCat);
+        logger.debug("Cat by name is{}", findCatByNameCatContainsIgnoreCase);
+        return findCatByNameCatContainsIgnoreCase;
+    }
+
 }
