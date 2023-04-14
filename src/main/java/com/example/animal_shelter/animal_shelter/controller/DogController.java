@@ -109,10 +109,10 @@ public class DogController {
             example = "пример заполнение: дЖЕк") @RequestParam(required = false, name = "Кличка питомца") String nameDog,
                                   @RequestParam(required = false, name = "Порода собаки, к примеру РОТвейлеР") String breedDog) {
         if (nameDog != null && !nameDog.isBlank()) {
-            return ResponseEntity.ok(dogService.findDodByNameDog(nameDog));
+            return ResponseEntity.ok(dogService.findDogByNameDog(nameDog));
         }
         if (breedDog != null && !breedDog.isBlank()) {
-            return ResponseEntity.ok(dogService.findDodByBreed(breedDog));
+            return ResponseEntity.ok(dogService.findDogByBreed(breedDog));
         }
         return ResponseEntity.ok(dogService.getAllDogs());
     }

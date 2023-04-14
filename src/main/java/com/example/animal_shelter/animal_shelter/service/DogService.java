@@ -84,7 +84,7 @@ public class DogService {
      * @param breedDog параметр со значением данных <b>порода собак</b>.
      * @return найденные <b>породы собак</b>.
      */
-    public Collection<Dog> findDodByBreed(String breedDog) {
+    public Collection<Dog> findDogByBreed(String breedDog) {
         logger.debug("Find dog by breed:{}", breedDog);
         final var findDogByBreedDogContainsIgnoreCase = dogRepository.findDogByBreedDogContainsIgnoreCase(breedDog);
         logger.debug("Cat by breed is{}", findDogByBreedDogContainsIgnoreCase);
@@ -97,7 +97,7 @@ public class DogService {
      * @param nameDog параметр со значением данных <b>кличка кошки</b>.
      * @return найденные <b>кошки по кличке</b>.
      */
-    public Dog findDodByNameDog(String nameDog) {
+    public Dog findDogByNameDog(String nameDog) {
         logger.debug("Find Dog by nameDog:{}", nameDog);
         final var findDogByNameDogContainsIgnoreCase = dogRepository.findDogByNameDogContainsIgnoreCase(nameDog);
         logger.debug("Dog by nameDog is{}", findDogByNameDogContainsIgnoreCase);

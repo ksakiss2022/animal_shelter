@@ -86,7 +86,7 @@ public class ReportController {
     }
 
     @Operation(
-            summary = "Поиск отчётов по chat_id.",
+            summary = "Поиск отчётов по id",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -101,11 +101,14 @@ public class ReportController {
     )
     @GetMapping //GET http://localhost:8080/reports
     public ResponseEntity findReports(@Parameter(description =
-            "Chat_id создателя отчёта",
-            example = "пример заполнения: 1511575117") @RequestParam(required = false, name = "Chat_id создателя отчёта") Long id) {
+            "Id создателя отчёта",
+            example = "пример заполнения: 2") @RequestParam(required = false, name = "Id создателя отчёта") Long id) {
         if (id != null) {
-            return ResponseEntity.ok(reportService.findReportsByChatId(id));
+            return ResponseEntity.ok(reportService.findReportById(id));
         }
-        return ResponseEntity.ok(reportService.getAllReports());
+        return ResponseEntity.ok(reportService.getAll());
     }
+
+
+
 }

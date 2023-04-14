@@ -25,6 +25,18 @@ public class Cat {
     @Column(name = "description", nullable = false)
     private String description;
 
+    public Cat() {
+
+    }
+
+    public Cat(Long id, String breed, String nameCat, int yearOfBirthCat, String description) {
+        this.id = id;
+        this.breed = breed;
+        this.nameCat = nameCat;
+        this.yearOfBirthCat = yearOfBirthCat;
+        this.description = description;
+    }
+
     public Long getId() {
         return id;
     }
