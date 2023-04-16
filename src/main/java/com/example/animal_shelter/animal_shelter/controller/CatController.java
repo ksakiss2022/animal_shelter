@@ -105,11 +105,11 @@ public class CatController {
             tags = "Cats"
     )
     @GetMapping //GET http://localhost:8080/cats
-    public ResponseEntity findCat(@Parameter(description =
-            "Кличка кошки, часть клички, прописными или заглавными буквами",
-            example = "пример заполнение:ВАська")
-                                  @RequestParam(required = false, name = "Кличка питомца") String nameCat,
-                                  @RequestParam(required = false, name = "Порода кошки, к примеру бРитанеЦ") String breed) {
+    public ResponseEntity findCat(
+            @Parameter(description = "Кличка кошки, часть клички, прописными или заглавными буквами", example = "пример заполнение:ВАська")
+            @RequestParam(required = false, name = "nameCat") String nameCat,
+            @RequestParam(required = false, name = "breed") String breed) {
+
         if (nameCat != null && !nameCat.isBlank()) {
             return ResponseEntity.ok(catService.findCatByNameCat(nameCat));
         }

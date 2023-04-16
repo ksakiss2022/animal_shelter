@@ -21,9 +21,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -146,11 +149,62 @@ class PersonCatControllerTest {
                 .andExpect(jsonPath("$.address").value(newAddress));
     }
 
+
     @Test
-    void deletePersonCat() throws  Exception {
+    void deletePersonCat() throws Exception {
+
+
+        long id = 1;
+        String name = "Александр";
+        int yearOfBirth = 1980;
+        String phone = "8-944-222-22-22";
+        String mail = "personalex@.ru";
+        String address = "г.Кукуево, улица Заречная, 5";
+        long chatId= 1;
+
+        PersonCat personCat = new PersonCat();
+        personCat.setId(id);
+        personCat.setName(name);
+        personCat.setYearOfBirth(yearOfBirth);
+        personCat.setPhone(phone);
+        personCat.setMail(mail);
+        personCat.setAddress(address);
+
+        doNothing().when(personCatRepository).deleteById(id);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/person_cats/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(personCatRepository, atLeastOnce()).deleteById(id);
+    }
+    @Test
+    void findPersonsCats() throws Exception {
     }
 
     @Test
-    void findPersonsCats() throws Exception {
+    //тест для метода findPersonsCats(), который вернет всех хозяев кошек, если не переданы никакие параметры
+    public void shouldReturnAllPersonsCats() throws Exception {
+        mockMvc.perform(get("/person_cats"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    //тест на пустой список к методу findPersonsCats:
+    public void shouldReturnEmptyListIfNoPersonCatsFound() throws Exception {
+        mockMvc.perform(get("/person_cats")
+                        .param("name", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+    @Test
+//тест для метода findPersonsCats(), который вернет пустой список, если переданы некорректные параметры:
+    public void shouldReturnEmptyList() throws Exception {
+        mockMvc.perform(get("/person_cats")
+                        .param("name", " ")
+                        .param("mail", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

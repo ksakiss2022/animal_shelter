@@ -20,9 +20,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -143,11 +146,60 @@ class PersonDogControllerTest {
                 .andExpect(jsonPath("$.address").value(newAddress));
     }
 
-    @Test
-    void deletePersonDog()  throws Exception {
-    }
 
     @Test
-    void findPersonsDogs()  throws Exception{
+    void deletePersonDog() throws Exception {
+
+
+        long id = 1;
+        String name = "Никита";
+        int yearOfBirth = 1981;
+        String phone = "8-990-333-22-22";
+        String mail = "person@.ru";
+        String address = "г.Домодедово, улица Талалихина, 5";
+        long chatId= 1;
+
+        PersonDog personDog = new PersonDog();
+        personDog.setId(id);
+        personDog.setName(name);
+        personDog.setYearOfBirth(yearOfBirth);
+        personDog.setPhone(phone);
+        personDog.setMail(mail);
+        personDog.setAddress(address);
+
+        doNothing().when(personDogRepository).deleteById(id);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/person_dogs/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(personDogRepository, atLeastOnce()).deleteById(id);
+    }
+
+
+    @Test
+    //тест для метода findPersonsDogs(), который вернет всех хозяев собак, если не переданы никакие параметры
+    public void shouldReturnAllPersonsDogs() throws Exception {
+        mockMvc.perform(get("/person_dogs"))
+                .andExpect(status().isOk());
+    }
+    @Test
+    //тест на пустой список к методу findPersonsDogs():
+    public void shouldReturnEmptyListIfNoPersonsDogsFound() throws Exception {
+        mockMvc.perform(get("/person_dogs")
+                        .param("name", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+    @Test
+//тест для метода findPersonsDogs(), который вернет пустой список, если переданы некорректные параметры:
+    public void shouldReturnEmptyList() throws Exception {
+        mockMvc.perform(get("/person_dogs")
+                        .param("name", " ")
+                        .param("mail", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
     }
 }

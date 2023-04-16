@@ -104,8 +104,8 @@ public class DogController {
     @GetMapping //GET http://localhost:8080/dogs
     public ResponseEntity findDog(@Parameter(description =
             "Кличка собаки, часть клички, прописными или заглавными буквами",
-            example = "пример заполнение: дЖЕк") @RequestParam(required = false, name = "Кличка питомца") String nameDog,
-                                  @RequestParam(required = false, name = "Порода собаки, к примеру РОТвейлеР") String breedDog) {
+            example = "пример заполнение: дЖЕк") @RequestParam(required = false, name = "nameDog") String nameDog,
+                                  @RequestParam(required = false, name = "breedDog") String breedDog) {
         if (nameDog != null && !nameDog.isBlank()) {
             return ResponseEntity.ok(dogService.findDogByNameDog(nameDog));
         }

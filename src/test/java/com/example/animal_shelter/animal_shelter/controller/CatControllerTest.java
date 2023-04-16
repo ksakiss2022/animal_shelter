@@ -16,13 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CatController.class)
@@ -133,37 +134,32 @@ class CatControllerTest {
 
     @Test
     void deleteCat() throws Exception {
-//        long id = 1;
-//        String breed = "Сибирская";
-//        String nameCat = "Голди";
-//        int yearOfBirthCat = 2020;
-//        String description = "Спокойная, уровновешенная, любит рыбу.";
-//
-//        Cat cat = new Cat();
-//        cat.setId(id);
-//        cat.setBreed(breed);
-//        cat.setNameCat(nameCat);
-//        cat.setYearOfBirthCat(yearOfBirthCat);
-//        cat.setDescription(description);
-//
-//        when(catRepository.getById(id)).thenReturn(cat);
-//
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .delete("/cats/{id}", id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(id))
-//                .andExpect(jsonPath("$.breed").value(breed))
-//                .andExpect(jsonPath("$.nameCat").value(nameCat))
-//                .andExpect(jsonPath("$.yearOfBirthCat").value(yearOfBirthCat))
-//                .andExpect(jsonPath("$.description").value(description));
-//
-//        verify(catRepository, atLeastOnce()).deleteById(id);
+        long id = 1;
+        String breed = "Сибирская";
+        String nameCat = "Голди";
+        int yearOfBirthCat = 2020;
+        String description = "Спокойная, уровновешенная, любит рыбу.";
+
+        Cat cat = new Cat();
+        cat.setId(id);
+        cat.setBreed(breed);
+        cat.setNameCat(nameCat);
+        cat.setYearOfBirthCat(yearOfBirthCat);
+        cat.setDescription(description);
+
+        doNothing().when(catRepository).deleteById(id);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/cats/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(catRepository, atLeastOnce()).deleteById(id);
     }
 
-    @Test
-    public void findCatt() throws Exception {
+//    @Test
+//    public void findCatt() throws Exception {
 //        long id1 = 1;
 //        String breed1 = "Персидский кот";
 //        int yearOfBirthCat1 = 2019;
@@ -191,16 +187,72 @@ class CatControllerTest {
 //        cat2.setDescription(description2);
 //        cat2.setBreed(breed2);
 //
-//        //when(catRepository.findCatByNameCatContainsIgnoreCase(nameCat)).thenReturn((Cat) Set.of(cat1, cat2));
-//        when(catRepository.findCatByNameCatContainsIgnoreCase(any(String.class))).thenReturn((Cat)Set.of(cat1,cat2));
 //        mockMvc.perform(MockMvcRequestBuilders
 //                        .get("/cats")
 //                        .queryParam("nameCat", nameCat)
-//                       // .contentType(MediaType.APPLICATION_JSON)
+//                        // .contentType(MediaType.APPLICATION_JSON)
 //                        .accept(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isOk())
-//                .andExpect(content().json(objectMapper.writeValueAsString(List.of(cat1,cat2))));
-
-
+//                .andExpect(content().json(objectMapper.writeValueAsString(List.of(cat1, cat2))));
+//
+//
+//    }
+//    //when(catRepository.findCatByNameCatContainsIgnoreCase(nameCat)).thenReturn((Cat) Set.of(cat1, cat2));
+//    //  when(catRepository.findCatByNameCatContainsIgnoreCase(any(String.class))).thenReturn((Cat) Set.of(cat1, cat2));
+//
+    @Test
+    //тест для метода findCat(), который вернет всех кошек, если не переданы никакие параметры
+    public void shouldReturnAllCats() throws Exception {
+        mockMvc.perform(get("/cats"))
+                .andExpect(status().isOk());
     }
+    @Test
+    //тест на пустой список:
+    public void shouldReturnEmptyListIfNoCatsFound() throws Exception {
+        mockMvc.perform(get("/cats")
+                        .param("nameCat", " "))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+    @Test
+//тест для метода findCat(), который вернет пустой список, если переданы некорректные параметры:
+    public void shouldReturnEmptyList() throws Exception {
+        mockMvc.perform(get("/cats")
+                        .param("nameCat", " ")
+                        .param("breed", ""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+//    @Test
+//    //Напишите тест для метода findCat(), который вернет кошку по кличке, если передан параметр nameCat:
+//    public void shouldReturnCatByName() throws Exception {
+//        String name = "Васька";
+//        mockMvc.perform(get("/cats")
+//                        .param("nameCat", name))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.nameCat",is(name)));
+//
+//    }
+//    @Test
+//    public void shouldReturnCatByName() throws Exception {
+//        String name = "Васька";
+//        mockMvc.perform(get("/cats")
+//                        .param("nameCat", name))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.nameCat", is(name)))
+//                .andExpect(jsonPath("$.age", is(2)))
+//                .andExpect(jsonPath("$.breed", is("Шотландская короткошерстная")));
+//    }
+
+//@Test
+////тест для метода findCat(), который вернет кошку по породе, если передан параметр breed:
+//public void shouldReturnCatByBreed() throws Exception {
+//    String breed = "Персидская";
+//    mockMvc.perform(get("/cats")
+//                    .param("breed", breed))
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.breed", is(breed)));
+//}
+
 }

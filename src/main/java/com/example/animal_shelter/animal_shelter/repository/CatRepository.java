@@ -10,4 +10,5 @@ import java.util.Collection;
 public interface CatRepository extends JpaRepository<Cat, Long> {
     Collection<Cat> findCatByBreedContainsIgnoreCase(String breed);
     Cat findCatByNameCatContainsIgnoreCase(String nameCat);
+
 }
