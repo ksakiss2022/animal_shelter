@@ -1,7 +1,7 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 import com.example.animal_shelter.animal_shelter.model.DocumentDog;
-import com.example.animal_shelter.animal_shelter.model.TypesDocumentDog;
+import com.example.animal_shelter.animal_shelter.model.TypesDocument;
 import com.example.animal_shelter.animal_shelter.repository.DocumentDogRepository;
 import com.example.animal_shelter.animal_shelter.service.DocumentDogService;
 import org.json.JSONObject;
@@ -15,9 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,7 +37,7 @@ class DocumentDogControllerTest {
 
     @Test
     void createDocumentDog() throws Exception{
-        final TypesDocumentDog typeDocumentDog = TypesDocumentDog.DOCUMENTS_TO_ADOPT_DOG;
+        final TypesDocument typeDocumentDog = TypesDocument.DOCUMENTS_TO_ADOPT_ANIMAL;
         final String text = "Тестовый документ";
 
         JSONObject documentDogObject = new JSONObject();
@@ -50,7 +47,7 @@ class DocumentDogControllerTest {
         DocumentDog documentDog = new DocumentDog(typeDocumentDog,text);
 
         when(documentDogRepository.save(any(DocumentDog.class))).thenReturn(documentDog);
-        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocumentDog.class))).thenReturn(documentDog);
+        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocument.class))).thenReturn(documentDog);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/document_dog")
@@ -64,10 +61,10 @@ class DocumentDogControllerTest {
 
     @Test
     void editShelter() throws Exception{
-        final TypesDocumentDog typeDocumentDog = TypesDocumentDog.DOCUMENTS_TO_ADOPT_DOG;
+        final TypesDocument typeDocumentDog = TypesDocument.DOCUMENTS_TO_ADOPT_ANIMAL;
         final String text = "Тестовый документ";
 
-        final TypesDocumentDog newTypeDocumentDog = TypesDocumentDog.DOCUMENTS_TO_ADOPT_DOG;
+        final TypesDocument newTypeDocumentDog = TypesDocument.DOCUMENTS_TO_ADOPT_ANIMAL;
         final String newText = "Тестовый документ новый";
 
         JSONObject documentDogObject = new JSONObject();
@@ -78,7 +75,7 @@ class DocumentDogControllerTest {
         DocumentDog newDocumentDog = new DocumentDog(newTypeDocumentDog,newText);
 
         when(documentDogRepository.save(any(DocumentDog.class))).thenReturn(newDocumentDog);
-        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocumentDog.class))).thenReturn(documentDog);
+        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocument.class))).thenReturn(documentDog);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .put("/document_dog")
@@ -93,14 +90,14 @@ class DocumentDogControllerTest {
 
     @Test
     void deleteDocumentDog() throws Exception{
-        final TypesDocumentDog typeDocumentDog = TypesDocumentDog.DOCUMENTS_TO_ADOPT_DOG;
+        final TypesDocument typeDocumentDog = TypesDocument.DOCUMENTS_TO_ADOPT_ANIMAL;
         final String text = "Тестовый документ";
 
         DocumentDog documentDog = new DocumentDog();
         documentDog.setTypeDocumentDog(typeDocumentDog);
         documentDog.setText(text);
 
-        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocumentDog.class))).thenReturn(documentDog);
+        when(documentDogRepository.findDocumentDogByTypeDocumentDog(any(TypesDocument.class))).thenReturn(documentDog);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/document_dog/{typeDocumentDog}", typeDocumentDog)

@@ -6,15 +6,10 @@ import com.example.animal_shelter.animal_shelter.repository.LocationMapRepositor
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.example.animal_shelter.animal_shelter.service.LocationMapService;
 import com.example.animal_shelter.animal_shelter.service.ShelterService;
-import org.assertj.core.api.Assertions;
-import org.hibernate.mapping.Any;
-import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.then;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,26 +19,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.InputStream;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = LocationMapController.class)
@@ -58,6 +45,7 @@ class LocationMapControllerTest {
 
     @SpyBean
     private LocationMapService locationMapService;
+
     @SpyBean
     private ShelterService shelterService;
 
@@ -145,20 +133,67 @@ class LocationMapControllerTest {
 
         when(locationMapRepository.findAll(any(Pageable.class))).thenReturn(page);
 
-
-               mockMvc.perform(MockMvcRequestBuilders
-                        .get("/location_maps/",0,1)
-                               .content(page.getContent().toString())
-
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/location_maps/", 0, 1)
+                        .content(page.getContent().toString())
                 )
                 .andExpect(result -> list.toString()) ;
     }
 
     @Test
-    void downloadLocationMap() {
+    void downloadLocationMap() throws Exception {
+        Long id = 1L;
+        String filePath = "locationMaps\\Shelter{id=1, name='приют1', information='инфа', schedule='расписание', address='адрес', safetyRecommendations='тб'}.jpg";//"hello.jpg";
+
+        Long fileSize = 38213L;
+        String mediaType = "image/jpeg";
+        byte[] data = "Hello".getBytes();
+        Long shelterId = 1L;
+
+        LocationMap locationMap = new LocationMap();
+        locationMap.setId(id);
+        locationMap.setFilePath(filePath.toString());
+        locationMap.setFileSize(fileSize);
+        locationMap.setMediaType(mediaType);
+        locationMap.setData(data);
+        locationMap.setShelterId(shelterId);
+
+        when(locationMapRepository.findLocationMapById(any(Long.class))).thenReturn(Optional.of(locationMap));
+        InputStream is = mock(InputStream.class);
+        FileSystem fileSystem = mock(FileSystem.class);
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/location_maps/{id}", id))
+                .andExpect(status().isOk());
     }
 
     @Test
-    void deleteLocationMap() {
+    void deleteLocationMap() throws Exception{
+        Long id = 1L;
+        String filePath = "hello.jpg";
+
+        Long fileSize = 38213L;
+        String mediaType = "image/jpeg";
+        byte[] data = "Hello".getBytes();
+        Long shelterId = 1L;
+
+        LocationMap locationMap = new LocationMap();
+        locationMap.setId(id);
+        locationMap.setFilePath(filePath.toString());
+        locationMap.setFileSize(fileSize);
+        locationMap.setMediaType(mediaType);
+        locationMap.setData(data);
+        locationMap.setShelterId(shelterId);
+
+
+        when(locationMapRepository.findById(id)).thenReturn(Optional.of(locationMap));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/location_maps/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(locationMapRepository, atLeastOnce()).deleteById(id);
+
     }
 }

@@ -104,16 +104,6 @@ public class LocationMapController {
         }
     }
 
-//закомментировала, т.к. используем разные базы данных
-//    @GetMapping(value = "/{id}/avatar-from-db")
-//    public ResponseEntity<byte[]> downloadLocationMaps(@PathVariable Long id) {
-//        LocationMap locationMap = locationMapService.findLocationMap(id);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(locationMap.getMediaType()));
-//        headers.setContentLength(locationMap.getData().length);
-//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(locationMap.getData());
-//    }
-
     @Operation(
             summary = "Удаляем ранее внесенную схему проезда",
             responses = {

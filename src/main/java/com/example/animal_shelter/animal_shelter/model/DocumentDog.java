@@ -3,7 +3,6 @@ package com.example.animal_shelter.animal_shelter.model;
 //import org.hibernate.annotations.Type;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -18,16 +17,16 @@ import java.util.Objects;
 @Entity
 @Table(name = "document_dog")
 @TypeDef(
-        name = "types_document_dog",
+        name = "types_documents",
         typeClass  = PostgreSQLEnumType.class
 )
 
 public class DocumentDog {
     @Id
-    @Type(type = "types_document_dog")
+    @Type(type = "types_documents")
     @Column(name = "type_document_dog", nullable = false, columnDefinition = "types_document_dog")
     @Enumerated(EnumType.STRING)
-    private TypesDocumentDog typeDocumentDog;
+    private TypesDocument typeDocumentDog;
 
     @Column(name = "text", nullable = false)
     private String text;
@@ -35,18 +34,18 @@ public class DocumentDog {
     public DocumentDog() {
     }
 
-    public DocumentDog (TypesDocumentDog typeDocumentDog, String text ){
+    public DocumentDog (TypesDocument typeDocumentDog, String text ){
         this.typeDocumentDog = typeDocumentDog;
         this.text = text;
     }
 
 
 
-    public TypesDocumentDog getTypeDocumentDog() {
+    public TypesDocument getTypeDocumentDog() {
         return typeDocumentDog;
     }
 
-    public void setTypeDocumentDog(TypesDocumentDog typeDocumentDog) {
+    public void setTypeDocumentDog(TypesDocument typeDocumentDog) {
         this.typeDocumentDog = typeDocumentDog;
     }
 
