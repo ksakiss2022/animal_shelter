@@ -11,13 +11,6 @@ public  enum BotState {
     ACCEPT_RECORD_CONTACT("accept_record_contact"),
     ADOPT_DOC_FROM_SHELTER("adopt_doc_from_shelter"),
     SEND_PET_REPORT("send_pet_report"),
-//    DOG_DATING_RULES("DOG_DATING_RULES"),
-//    DOCUMENTS_TO_ADOPT_DOG("DOCUMENTS_TO_ADOPT_DOG"),
-//    SHIPPING_RECOMMENDATIONS ("SHIPPING_RECOMMENDATIONS"),
-//    PUPPY_HOME_IMPROVEMENT_TIPES("PUPPY_HOME_IMPROVEMENT_TIPES"),
-//    DOG_HOME_IMPROVEMENT_TIPES("DOG_HOME_IMPROVEMENT_TIPES"),
-
-//    DOG_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES("DOG_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES"),
 
     ANIMAL_DATING_RULES("ANIMAL_DATING_RULES"),
     DOCUMENTS_TO_ADOPT_ANIMAL("DOCUMENTS_TO_ADOPT_ANIMAL"),
@@ -34,7 +27,7 @@ public  enum BotState {
     ;
 
 
-    private String title;
+    private final String title;
 
     BotState(String title) {
         this.title = title;
