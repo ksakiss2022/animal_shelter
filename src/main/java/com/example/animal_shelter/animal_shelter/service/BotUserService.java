@@ -58,7 +58,7 @@ public class BotUserService {
      */
     public BotUser findBotUser(long id) {
         logger.debug("find BotUser by id");
-        return botUserRepository.findById(id).get();
+        return botUserRepository.findById(id).orElse(new BotUser());
     }
 
 }

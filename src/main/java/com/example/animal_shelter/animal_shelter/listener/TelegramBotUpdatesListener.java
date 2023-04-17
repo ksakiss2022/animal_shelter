@@ -1,11 +1,8 @@
 package com.example.animal_shelter.animal_shelter.listener;
 
-import com.example.animal_shelter.animal_shelter.controller.ShelterController;
 import com.example.animal_shelter.animal_shelter.model.*;
 import com.example.animal_shelter.animal_shelter.repository.*;
 import com.example.animal_shelter.animal_shelter.service.ReportService;
-import com.example.animal_shelter.animal_shelter.service.ShelterService;
-import com.pengrad.telegrambot.Callback;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.*;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -311,16 +307,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
             //кнопка команды "Как взять собаку из приюта"
             //выводится разичные списки документов для собаки
-            case ("DOG_DATING_RULES"):
-            case ("DOCUMENTS_TO_ADOPT_DOG"):
+            case ("ANIMAL_DATING_RULES"):
+            case ("DOCUMENTS_TO_ADOPT_ANIMAL"):
             case ("SHIPPING_RECOMMENDATIONS"):
-            case ("PUPPY_HOME_IMPROVEMENT_TIPES"):
-            case ("DOG_HOME_IMPROVEMENT_TIPES"):
-            case ("DOG_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES"):
+            case ("PUPPY_KITTEN_HOME_IMPROVEMENT_TIPES"):
+            case ("ANIMAL_HOME_IMPROVEMENT_TIPES"):
+            case ("ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES"):
             case ("CYNOLOG_ADVIVCE"):
             case ("REASONS_FOR_REJECTION"):
 
-                TypesDocumentDog typesDocumentDog = TypesDocumentDog.valueOf(data);
+                TypesDocument typesDocumentDog = TypesDocument.valueOf(data);
                 DocumentDog documentDog = documentDogRepository.findDocumentDogByTypeDocumentDog(typesDocumentDog);
 
                 String text = documentDog.getText();
@@ -396,23 +392,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         sendMessage.parseMode(ParseMode.Markdown);
 
         //выводится список кнопок для выбора
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Правила знакомства с собакой");
-        button1.callbackData(BotState.DOG_DATING_RULES.getTitle());
+        InlineKeyboardButton button1 = new InlineKeyboardButton("Правила знакомства с животным");
+        button1.callbackData(BotState.ANIMAL_DATING_RULES.getTitle());
 
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Документы, необходимых для того, чтобы взять собаку из приюта");
-        button2.callbackData(BotState.DOCUMENTS_TO_ADOPT_DOG.getTitle());
+        InlineKeyboardButton button2 = new InlineKeyboardButton("Документы, необходимых для того, чтобы взять животное из приюта");
+        button2.callbackData(BotState.DOCUMENTS_TO_ADOPT_ANIMAL.getTitle());
 
         InlineKeyboardButton button3 = new InlineKeyboardButton("Рекомендаций по транспортировке животного");
         button3.callbackData(BotState.SHIPPING_RECOMMENDATIONS.getTitle());
 
-        InlineKeyboardButton button4 = new InlineKeyboardButton("Рекомендации по обустройству дома для щенка");
-        button4.callbackData(BotState.PUPPY_HOME_IMPROVEMENT_TIPES.getTitle());
+        InlineKeyboardButton button4 = new InlineKeyboardButton("Рекомендации по обустройству дома для щенка/котенка");
+        button4.callbackData(BotState.PUPPY_KITTEN_HOME_IMPROVEMENT_TIPES.getTitle());
 
-        InlineKeyboardButton button5 = new InlineKeyboardButton("Рекомендации по обустройству дома для взрослой собаки");
-        button5.callbackData(BotState.DOG_HOME_IMPROVEMENT_TIPES.getTitle());
+        InlineKeyboardButton button5 = new InlineKeyboardButton("Рекомендации по обустройству дома для взрослого животного");
+        button5.callbackData(BotState.ANIMAL_HOME_IMPROVEMENT_TIPES.getTitle());
 
-        InlineKeyboardButton button6 = new InlineKeyboardButton("Рекомендации по обустройству дома для собаки с ограниченными возможностями (зрение, передвижение)");
-        button6.callbackData(BotState.DOG_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES.getTitle());
+        InlineKeyboardButton button6 = new InlineKeyboardButton("Рекомендации по обустройству дома для животного с ограниченными возможностями (зрение, передвижение)");
+        button6.callbackData(BotState.ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES.getTitle());
 
         InlineKeyboardButton button7 = new InlineKeyboardButton("Советы кинолога по первичному общению с собакой");
         button7.callbackData(BotState.CYNOLOG_ADVIVCE.getTitle());

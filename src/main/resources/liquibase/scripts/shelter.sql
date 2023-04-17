@@ -177,14 +177,14 @@ ALTER TABLE person_dog_report
     ADD FOREIGN KEY (person_dog) REFERENCES dog (id);
 
 -- changeset salimgareeva:9
-CREATE SCHEMA IF NOT EXISTS types_document_dog;
-create type types_document_dog as enum (
-    'DOG_DATING_RULES',
-    'DOCUMENTS_TO_ADOPT_DOG',
+CREATE SCHEMA IF NOT EXISTS types_documents;
+create type types_documents as enum (
+    'ANIMAL_DATING_RULES',
+    'DOCUMENTS_TO_ADOPT_ANIMAL',
     'SHIPPING_RECOMMENDATIONS',
-    'PUPPY_HOME_IMPROVEMENT_TIPES',
-    'DOG_HOME_IMPROVEMENT_TIPES',
-    'DOG_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES',
+    'PUPPY_KITTEN_HOME_IMPROVEMENT_TIPES',
+    'ANIMAL_HOME_IMPROVEMENT_TIPES',
+    'ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES',
     'CYNOLOG_ADVIVCE',
     'REASONS_FOR_REJECTION');
 
@@ -192,7 +192,7 @@ create type types_document_dog as enum (
 CREATE SCHEMA IF NOT EXISTS document_dog;
 CREATE TABLE IF NOT EXISTS document_dog
 (
-    type_document_dog       types_document_dog NOT NULL primary key,
+    type_document_dog       types_documents NOT NULL primary key,
     text                    TEXT NOT NULL
 
 );

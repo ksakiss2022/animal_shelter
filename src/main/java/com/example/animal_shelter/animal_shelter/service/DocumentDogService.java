@@ -1,7 +1,7 @@
 package com.example.animal_shelter.animal_shelter.service;
 
 import com.example.animal_shelter.animal_shelter.model.DocumentDog;
-import com.example.animal_shelter.animal_shelter.model.TypesDocumentDog;
+import com.example.animal_shelter.animal_shelter.model.TypesDocument;
 import com.example.animal_shelter.animal_shelter.repository.DocumentDogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class DocumentDogService {
      * @param typeDocumentDog идентификатор искомого <b>документа для собак</b>, <u>не может быть null</u>.
      */
     @Transactional
-    public void deleteDocumentDog(TypesDocumentDog typeDocumentDog) {
+    public void deleteDocumentDog(TypesDocument typeDocumentDog) {
         logger.debug("Delete deleteDocumentDog:{}", typeDocumentDog);
         documentDogRepository.deleteDocumentDogByTypeDocumentDog(typeDocumentDog);
 
