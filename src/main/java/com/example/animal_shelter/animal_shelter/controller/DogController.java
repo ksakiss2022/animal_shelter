@@ -82,7 +82,7 @@ public class DogController {
             tags = "Dogs"
     )
     @DeleteMapping("{id}") //DELETE http://localhost:8080/dogs/3
-    public ResponseEntity deleteDog(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDog(@PathVariable Long id) {
         dogService.deleteDog(id);
         return ResponseEntity.ok().build();
     }
@@ -102,7 +102,7 @@ public class DogController {
             tags = "Dogs"
     )
     @GetMapping //GET http://localhost:8080/dogs
-    public ResponseEntity findDog(@Parameter(description =
+    public ResponseEntity<?> findDog(@Parameter(description =
             "Кличка собаки, часть клички, прописными или заглавными буквами",
             example = "пример заполнение: дЖЕк") @RequestParam(required = false, name = "nameDog") String nameDog,
                                   @RequestParam(required = false, name = "breedDog") String breedDog) {

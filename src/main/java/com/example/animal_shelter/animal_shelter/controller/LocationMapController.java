@@ -127,7 +127,7 @@ public class LocationMapController {
             )
     }, tags = "Location Maps")
     @DeleteMapping("{id}") //DELETE http://localhost:8080/location_maps/3
-    public ResponseEntity deleteLocationMap(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteLocationMap(@PathVariable Long id) {
         locationMapService.deleteLocationMap(id);
         return ResponseEntity.ok().build();
     }

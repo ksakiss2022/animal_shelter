@@ -85,7 +85,7 @@ public class CatController {
             tags = "Cats"
     )
     @DeleteMapping("{id}") //DELETE http://localhost:8080/cats/3
-    public ResponseEntity deleteCat(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCat(@PathVariable Long id) {
         catService.deleteCat(id);
         return ResponseEntity.ok().build();
     }
@@ -104,12 +104,26 @@ public class CatController {
             },
             tags = "Cats"
     )
+//    @GetMapping //GET http://localhost:8080/cats
+//    public ResponseEntity findCat(
+//            @Parameter(description = "Кличка кошки, часть клички, прописными или заглавными буквами", example = "пример заполнение:ВАська")
+//            @RequestParam(required = false, name = "nameCat") String nameCat,
+//            @RequestParam(required = false, name = "breed") String breed) {
+//
+//        if (nameCat != null && !nameCat.isBlank()) {
+//            return ResponseEntity.ok(catService.findCatByNameCat(nameCat));
+//        }
+//        if (breed != null && !breed.isBlank()) {
+//            return ResponseEntity.ok(catService.findCatByBreed(breed));
+//        }
+//        return ResponseEntity.ok(catService.getAllCats());
+//    }
+
     @GetMapping //GET http://localhost:8080/cats
-    public ResponseEntity findCat(
+    public ResponseEntity<?> findCat(
             @Parameter(description = "Кличка кошки, часть клички, прописными или заглавными буквами", example = "пример заполнение:ВАська")
             @RequestParam(required = false, name = "nameCat") String nameCat,
             @RequestParam(required = false, name = "breed") String breed) {
-
         if (nameCat != null && !nameCat.isBlank()) {
             return ResponseEntity.ok(catService.findCatByNameCat(nameCat));
         }
@@ -118,5 +132,4 @@ public class CatController {
         }
         return ResponseEntity.ok(catService.getAllCats());
     }
-
 }

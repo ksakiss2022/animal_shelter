@@ -80,7 +80,7 @@ public class ReportController {
             tags = "Report"
     )
     @DeleteMapping("{id}") //DELETE http://localhost:8080/reports/3
-    public ResponseEntity deleteReport(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReport(@PathVariable Long id) {
         reportService.deleteReport(id);
         return ResponseEntity.ok().build();
     }
@@ -100,7 +100,7 @@ public class ReportController {
             tags = "Report"
     )
     @GetMapping //GET http://localhost:8080/reports
-    public ResponseEntity findReports(@Parameter(description =
+    public ResponseEntity<?> findReports(@Parameter(description =
             "Id создателя отчёта",
             example = "пример заполнения: 2") @RequestParam(required = false, name = "Id создателя отчёта") Long id) {
         if (id != null) {

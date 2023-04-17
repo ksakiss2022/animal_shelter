@@ -79,7 +79,7 @@ public class ShelterController {
                     )
             }, tags = "Shelters")
     @DeleteMapping("{id}") //DELETE http://localhost:8080/shelter/3
-    public ResponseEntity deleteShelter(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteShelter(@PathVariable Long id) {
         shelterService.deleteShelter(id);
         return ResponseEntity.ok().build();
     }

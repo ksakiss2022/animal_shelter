@@ -22,6 +22,8 @@ public class CatService {
         this.catRepository = catRepository;
     }
 
+
+
     /**
      * Метод createCat создает новых <b>кошек</b>, вносимая онформацию о них в базу данных.
      *

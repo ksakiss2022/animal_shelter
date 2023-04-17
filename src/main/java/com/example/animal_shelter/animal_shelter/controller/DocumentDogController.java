@@ -80,7 +80,7 @@ public class DocumentDogController {
             )
     }, tags = "Document Dog")
     @DeleteMapping("{typeDocumentDog}") //DELETE http://localhost:8080/document_dog/3
-    public ResponseEntity deleteDocumentDog(@PathVariable TypesDocumentDog typeDocumentDog) {
+    public ResponseEntity<Void> deleteDocumentDog(@PathVariable TypesDocumentDog typeDocumentDog) {
         documentDogService.deleteDocumentDog(typeDocumentDog);
         return ResponseEntity.ok().build();
     }

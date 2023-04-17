@@ -80,7 +80,7 @@ public class PersonCatController {
             tags = "Person Cat"
     )
     @DeleteMapping("{id}") //DELETE http://localhost:8080/person_cats/3
-    public ResponseEntity deletePersonCat(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePersonCat(@PathVariable Long id) {
         personCatService.deletePersonCat(id);
         return ResponseEntity.ok().build();
     }
@@ -100,7 +100,7 @@ public class PersonCatController {
             tags = "Person Cat"
     )
     @GetMapping //GET http://localhost:8080/person_cats
-    public ResponseEntity findPersonsCats(@Parameter(description =
+    public ResponseEntity<?> findPersonsCats(@Parameter(description =
             "Имя хозяина кошки, часть имени, прописными или заглавными буквами",
             example = "пример заполнение: Короленко") @RequestParam(required = false, name = "Имя хозяина питомца") String name,
                                           @RequestParam(required = false, name = "@mail, к примеру vaska@mail.ru") String mail) {
