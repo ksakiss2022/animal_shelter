@@ -1,7 +1,7 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 import com.example.animal_shelter.animal_shelter.model.DocumentDog;
-import com.example.animal_shelter.animal_shelter.model.TypesDocument;
+import com.example.animal_shelter.animal_shelter.model.TypesDocuments;
 import com.example.animal_shelter.animal_shelter.service.DocumentDogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -77,7 +77,7 @@ public class DocumentDogController {
             )
     }, tags = "Document Dog")
     @DeleteMapping("{typeDocumentDog}") //DELETE http://localhost:8080/document_dog/3
-    public ResponseEntity<Void> deleteDocumentDog(@PathVariable TypesDocumentDog typeDocumentDog) {
+    public ResponseEntity<Void> deleteDocumentDog(@PathVariable TypesDocuments typeDocumentDog) {
         documentDogService.deleteDocumentDog(typeDocumentDog);
         return ResponseEntity.ok().build();
     }

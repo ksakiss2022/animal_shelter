@@ -1,6 +1,7 @@
 package com.example.animal_shelter.animal_shelter.controller;
 
 import com.example.animal_shelter.animal_shelter.model.Shelter;
+import com.example.animal_shelter.animal_shelter.model.TypesShelters;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.example.animal_shelter.animal_shelter.service.ShelterService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +46,7 @@ class ShelterControllerTest {
         final String schedule = "Расписание тестового приюта - с 10 до 18";
         final String address = "Адрес тестового приюта - д.Простоквашино";
         final String safetyRecommendations = "ТБ - осторожность и аккуратность";
+        final TypesShelters typeShelter = TypesShelters.DOG_SHELTER;
         final Long id = null;
 
         JSONObject shelterObject = new JSONObject();
@@ -54,8 +56,9 @@ class ShelterControllerTest {
         shelterObject.put("address",address);
         shelterObject.put("safetyRecommendations",safetyRecommendations);
         shelterObject.put("id",id);
+        shelterObject.put("typeShelter",typeShelter);
 
-        Shelter shelter = new Shelter(name, information,schedule,address,safetyRecommendations);
+        Shelter shelter = new Shelter(name, information,schedule,address,safetyRecommendations, typeShelter);
 
         when(shelterRepository.save(any(Shelter.class))).thenReturn(shelter);
         when(shelterRepository.findById(any(Long.class))).thenReturn(Optional.of(shelter));
@@ -71,7 +74,8 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.information").value(information))
                 .andExpect(jsonPath("$.schedule").value(schedule))
                 .andExpect(jsonPath("$.address").value(address))
-                .andExpect(jsonPath("$.safetyRecommendations").value(safetyRecommendations));
+                .andExpect(jsonPath("$.safetyRecommendations").value(safetyRecommendations))
+                .andExpect(jsonPath("$.typeShelter").value(typeShelter));
     }
 
 
@@ -83,6 +87,7 @@ class ShelterControllerTest {
         final String schedule = "Расписание тестового приюта - с 10 до 18";
         final String address = "Адрес тестового приюта - д.Простоквашино";
         final String safetyRecommendations = "ТБ - осторожность и аккуратность";
+        final TypesShelters typesShelters = TypesShelters.DOG_SHELTER;
         final Long id = 1L;
 
         final String newName = "Приют 245";
@@ -90,6 +95,7 @@ class ShelterControllerTest {
         final String newSchedule = "Расписание тестового приюта - с 10 до 18";
         final String newAddress = "Адрес тестового приюта - д.Простоквашино";
         final String newSafetyRecommendations = "ТБ - осторожность и аккуратность";
+        final TypesShelters newTypeShelter = TypesShelters.DOG_SHELTER;
         final Long newId = 2L;
 
 
@@ -99,10 +105,11 @@ class ShelterControllerTest {
         shelterObject.put("schedule",schedule);
         shelterObject.put("address",address);
         shelterObject.put("safetyRecommendations",safetyRecommendations);
+        shelterObject.put("typeShelter",typesShelters);
         shelterObject.put("id",id);
 
-        Shelter shelter = new Shelter(id,name, information,schedule,address,safetyRecommendations);
-        Shelter newShelter = new Shelter(id, newName, newInformation,newSchedule,newAddress,newSafetyRecommendations);
+        Shelter shelter = new Shelter(id,name, information,schedule,address,safetyRecommendations, typesShelters);
+        Shelter newShelter = new Shelter(id, newName, newInformation,newSchedule,newAddress,newSafetyRecommendations, newTypeShelter);
 
         when(shelterRepository.findById(any(Long.class))).thenReturn(Optional.of(shelter));
         when(shelterRepository.save(any(Shelter.class))).thenReturn(newShelter);
@@ -118,7 +125,8 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.information").value(newInformation))
                 .andExpect(jsonPath("$.schedule").value(newSchedule))
                 .andExpect(jsonPath("$.address").value(newAddress))
-                .andExpect(jsonPath("$.safetyRecommendations").value(newSafetyRecommendations));
+                .andExpect(jsonPath("$.safetyRecommendations").value(newSafetyRecommendations))
+                .andExpect(jsonPath("$.typeShelter").value(newTypeShelter));
 
 
     }
@@ -130,6 +138,7 @@ class ShelterControllerTest {
         String schedule = "Расписание тестового приюта - с 10 до 18";
         String address = "Адрес тестового приюта - д.Простоквашино";
         String safetyRecommendations = "ТБ - осторожность и аккуратность";
+        TypesShelters typesShelters = TypesShelters.DOG_SHELTER;
         Long id = 1L;
 
         Shelter shelter = new Shelter();
@@ -138,6 +147,7 @@ class ShelterControllerTest {
         shelter.setSchedule(schedule);
         shelter.setAddress(address);
         shelter.setSafetyRecommendations(safetyRecommendations);
+        shelter.setTypeShelter(typesShelters);
 
         when(shelterRepository.findById(id)).thenReturn(Optional.of(shelter));
 

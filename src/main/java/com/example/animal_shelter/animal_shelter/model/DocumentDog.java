@@ -26,7 +26,7 @@ public class DocumentDog {
     @Type(type = "types_documents")
     @Column(name = "type_document_dog", nullable = false, columnDefinition = "types_document_dog")
     @Enumerated(EnumType.STRING)
-    private TypesDocument typeDocumentDog;
+    private TypesDocuments typeDocumentDog;
 
     @Column(name = "text", nullable = false)
     private String text;
@@ -34,18 +34,18 @@ public class DocumentDog {
     public DocumentDog() {
     }
 
-    public DocumentDog (TypesDocument typeDocumentDog, String text ){
+    public DocumentDog (TypesDocuments typeDocumentDog, String text ){
         this.typeDocumentDog = typeDocumentDog;
         this.text = text;
     }
 
 
 
-    public TypesDocument getTypeDocumentDog() {
+    public TypesDocuments getTypeDocumentDog() {
         return typeDocumentDog;
     }
 
-    public void setTypeDocumentDog(TypesDocument typeDocumentDog) {
+    public void setTypeDocumentDog(TypesDocuments typeDocumentDog) {
         this.typeDocumentDog = typeDocumentDog;
     }
 

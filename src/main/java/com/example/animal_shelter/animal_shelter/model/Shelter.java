@@ -1,6 +1,8 @@
 package com.example.animal_shelter.animal_shelter.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,6 +14,10 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "shelter")
+@TypeDef(
+        name = "types_shelters",
+        typeClass  = PostgreSQLEnumType.class
+)
 public class Shelter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,25 +37,34 @@ public class Shelter {
     @Column(name = "safety_recommendations", nullable = false)
     private String safetyRecommendations;
 
+
+    @Type(type = "types_shelters")
+    @Column(name = "type_shelter", nullable = false, columnDefinition = "type_shelter")
+    @Enumerated(EnumType.STRING)
+    private TypesShelters typeShelter;
+
+
     public Shelter() {
 
     }
 
-    public Shelter(Long id, String name, String information, String schedule, String address, String safetyRecommendations) {
+    public Shelter(Long id, String name, String information, String schedule, String address, String safetyRecommendations, TypesShelters typeShelter) {
         this.id = id;
         this.name = name;
         this.information = information;
         this.schedule = schedule;
         this.address = address;
         this.safetyRecommendations = safetyRecommendations;
+        this.typeShelter = typeShelter;
     }
 
-    public Shelter(String name, String information, String schedule, String address, String safetyRecommendations) {
+    public Shelter(String name, String information, String schedule, String address, String safetyRecommendations, TypesShelters typeShelter) {
         this.name = name;
         this.information = information;
         this.schedule = schedule;
         this.address = address;
         this.safetyRecommendations = safetyRecommendations;
+        this.typeShelter = typeShelter;
     }
 
     @Override
@@ -61,6 +76,7 @@ public class Shelter {
                 ", schedule='" + schedule + '\'' +
                 ", address='" + address + '\'' +
                 ", safetyRecommendations='" + safetyRecommendations + '\'' +
+                ", typeShelter='" + typeShelter + '\'' +
                 '}';
     }
 
@@ -111,5 +127,13 @@ public class Shelter {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public TypesShelters getTypeShelter() {
+        return typeShelter;
+    }
+
+    public void setTypeShelter(TypesShelters typeShelter) {
+        this.typeShelter = typeShelter;
     }
 }

@@ -54,14 +54,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private long daysOfReports;
 
-
     private final ShelterRepository shelterRepository;
-
 
     private final LocationMapRepository locationMapRepository;
 
-
     private final DocumentDogRepository documentDogRepository;
+    private final CallBackQueryHandler callBackQueryHandler;
 
     @Autowired
     private BotUserRepository botUserRepository;
@@ -75,7 +73,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private ReportService reportService;
 
-    private final CallBackQueryHandler callBackQueryHandler;
     private final CommandHandler commandHandler;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, CallBackQueryHandler callBackQueryHandler, CommandHandler commandHandler) {
@@ -287,8 +284,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
 
     }
-
-
-
-
 }

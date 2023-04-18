@@ -1,6 +1,6 @@
 package com.example.animal_shelter.animal_shelter.model;
 
-public  enum TypesDocument {
+public  enum TypesDocuments {
     ANIMAL_DATING_RULES("Правила знакомства с животным до того, как можно забрать ее из приюта"),
     DOCUMENTS_TO_ADOPT_ANIMAL("Документы, необходимые для того, чтобы взять животное из приюта"),
     SHIPPING_RECOMMENDATIONS ("Рекомендации по транспортировке животного"),
@@ -12,7 +12,7 @@ public  enum TypesDocument {
 
     private final String title;
 
-    TypesDocument(String title) {
+    TypesDocuments(String title) {
         this.title = title;
     }
 

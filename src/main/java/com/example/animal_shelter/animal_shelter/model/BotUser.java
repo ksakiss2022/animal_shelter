@@ -24,8 +24,15 @@ public class BotUser {
     @Column()
     private String contact;
 
-    @Column(name = "shelter_id", nullable = false)
+    @Column(name = "shelter_id")
     private Long shelterId;
+
+    public BotUser() {
+    }
+
+    public BotUser(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

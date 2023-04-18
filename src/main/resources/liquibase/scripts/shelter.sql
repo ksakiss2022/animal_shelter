@@ -202,9 +202,20 @@ CREATE SCHEMA IF NOT EXISTS bot_user;
 CREATE TABLE IF NOT EXISTS bot_user
 (
     id                      BIGINT NOT NULL primary key,
-    last_request            TEXT NOT NULL,
-    contact                 TEXT NOT NULL,
-    shelter_id              BIGINT NOT NULL
-
+    last_request            TEXT,
+    contact                 TEXT,
+    shelter_id              BIGINT
 
 );
+-- changeset salimgareeva:11
+
+CREATE SCHEMA IF NOT EXISTS types_shelters;
+create type types_shelters as enum (
+    'CAT_SHELTER',
+    'DOG_SHELTER'
+);
+
+
+
+ALTER TABLE shelter
+        ADD COLUMN type_shelter types_shelters NOT NULL ;
