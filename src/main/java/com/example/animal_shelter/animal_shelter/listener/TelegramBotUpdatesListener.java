@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,13 +34,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-    private static final String infoAboutReport = "Для отчета нужна следующая информация:\n" +
+    private static final String INFO_ABOUT_REPORT = "Для отчета нужна следующая информация:\n" +
             "- Фото животного.  \n" +
             "- Рацион животного\n" +
             "- Общее самочувствие и привыкание к новому месту\n" +
             "- Изменение в поведении: отказ от старых привычек, приобретение новых.\nСкопируйте следующий пример. Не забудьте прикрепить фото";
 
-    private static final String reportExample = "Рацион: ваш текст;\n" +
+    private static final String REPORT_EXAMPLE = "Рацион: ваш текст;\n" +
             "Самочувствие: ваш текст;\n" +
             "Поведение: ваш текст;";
 
@@ -275,7 +276,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Scheduled(cron = "* 30 21 * * *")
     public void checkResults() {
         if (daysOfReports < 30) {
-            var twoDay = 172800000;
+            var twoDay = TimeUnit.DAYS.toMillis(2);
             var nowTime = new Date().getTime() - twoDay;
             var getDistinct = reportRepository.findAll().stream()
                     .sorted(Comparator.comparing(Report::getChatId))

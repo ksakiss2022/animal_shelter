@@ -78,7 +78,7 @@ public class ShelterService {
      */
     public Shelter findShelter(long id) {
         logger.debug("find Shelter by id");
-        return shelterRepository.findById(id).orElse(new Shelter());
+        return shelterRepository.findById(id).orElse(null);
     }
 
 

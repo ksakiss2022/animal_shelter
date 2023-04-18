@@ -155,7 +155,7 @@ public class ReportService {
 
     public Report findReportById(Long id) {
         logger.info("Requesting find report by id");
-        return reportRepository.findReportById(id).orElse(new Report());
+        return reportRepository.findReportById(id).orElse(null);
     }
 
     /**

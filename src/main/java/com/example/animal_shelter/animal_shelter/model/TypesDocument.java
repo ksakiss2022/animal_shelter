@@ -10,7 +10,7 @@ public  enum TypesDocument {
     CYNOLOG_ADVIVCE("Советы кинолога по первичному общению с собакой."),
     REASONS_FOR_REJECTION("Причины, почему могут отказать и не дать забрать собаку из приюта");
 
-    private String title;
+    private final String title;
 
     TypesDocument(String title) {
         this.title = title;

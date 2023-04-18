@@ -26,7 +26,7 @@ public class LocationMapService {
         private ShelterService shelterService;
         private LocationMapRepository locationMapRepository;
 
-        Logger logger = LoggerFactory.getLogger(LocationMapService.class);
+        private final Logger logger = LoggerFactory.getLogger(LocationMapService.class);
 
         public LocationMapService(ShelterService shelterService, LocationMapRepository locationMapRepository) {
             this.shelterService = shelterService;
