@@ -94,7 +94,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         try {
             updates.forEach(update -> {
                 LOG.info("Processing update: {}", update);
-
+                if (update.callbackQuery() != null) {
+                    callBackQueryHandler.handle(update.callbackQuery(), update, telegramBot);
+                    return;
+                }
                 String nameUser = update.message().chat().firstName();
                 String textUpdate = update.message().text();
                 Integer messageId = update.message().messageId();
@@ -143,10 +146,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     }
 
 
-                if (update.callbackQuery() != null) {
-                    callBackQueryHandler.handle(update.callbackQuery(), update, telegramBot);
 
-                } else if (update.message()!=null&&update.message().text()!=null) {
+                else if (update.message()!=null&&update.message().text()!=null) {
                     commandHandler.handle(update.message().text(), update.message().from());
                 }
                 //else {

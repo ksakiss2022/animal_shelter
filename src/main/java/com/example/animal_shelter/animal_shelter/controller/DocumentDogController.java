@@ -60,7 +60,7 @@ public class DocumentDogController {
             )
     }, tags = "Document Dog")
     @PutMapping //PUT http://localhost:8080/document_dog
-    public DocumentDog editShelter(@RequestBody DocumentDog documentDog) {
+    public DocumentDog editDocumentDog(@RequestBody DocumentDog documentDog) {
         return documentDogService.editDocumentDog(documentDog);
     }
 

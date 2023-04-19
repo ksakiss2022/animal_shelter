@@ -214,11 +214,17 @@ create type types_shelters as enum (
     'DOG_SHELTER'
 );
 
-
-
 ALTER TABLE shelter
         ADD COLUMN type_shelter types_shelters NOT NULL ;
 
 -- changeset salimgareeva:12
 ALTER TABLE bot_user
     ADD COLUMN type_shelter types_shelters NOT NULL ;
+
+-- changeset salimgareeva:13
+CREATE SCHEMA IF NOT EXISTS document_cat;
+CREATE TABLE IF NOT EXISTS document_cat
+(
+    type_document_cat       types_documents NOT NULL primary key,
+    text                    TEXT NOT NULL
+);

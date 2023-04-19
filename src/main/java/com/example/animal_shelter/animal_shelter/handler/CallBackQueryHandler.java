@@ -2,10 +2,7 @@ package com.example.animal_shelter.animal_shelter.handler;
 
 import com.example.animal_shelter.animal_shelter.listener.TelegramBotUpdatesListener;
 import com.example.animal_shelter.animal_shelter.model.*;
-import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
-import com.example.animal_shelter.animal_shelter.repository.DocumentDogRepository;
-import com.example.animal_shelter.animal_shelter.repository.LocationMapRepository;
-import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
+import com.example.animal_shelter.animal_shelter.repository.*;
 import com.example.animal_shelter.animal_shelter.service.BotUserService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
@@ -29,16 +26,20 @@ public class CallBackQueryHandler {
     private final LocationMapRepository locationMapRepository;
 
     private final DocumentDogRepository documentDogRepository;
+    private final DocumentCatRepository documentCatRepository;
     private final BotUserRepository botUserRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
 
-    public CallBackQueryHandler(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, BotUserRepository botUserRepository) {
+    public CallBackQueryHandler(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository,
+                                DocumentDogRepository documentDogRepository, BotUserRepository botUserRepository,
+                            DocumentCatRepository documentCatRepository) {
         this.telegramBot = telegramBot;
         this.shelterRepository = shelterRepository;
         this.locationMapRepository = locationMapRepository;
         this.documentDogRepository = documentDogRepository;
+        this.documentCatRepository = documentCatRepository;
         this.botUserRepository = botUserRepository;
 
     }
@@ -105,8 +106,8 @@ public class CallBackQueryHandler {
                 telegramBot.execute(sendPhoto);
                 break;
 
-            //кнопка команды "Как взять собаку из приюта"
-            //выводится разичные списки документов для собаки
+            //кнопка команды "Как взять животное из приюта"
+            //выводится разичные списки документов для животного
             case ("ANIMAL_DATING_RULES"):
             case ("DOCUMENTS_TO_ADOPT_ANIMAL"):
             case ("SHIPPING_RECOMMENDATIONS"):
@@ -115,13 +116,7 @@ public class CallBackQueryHandler {
             case ("ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES"):
             case ("CYNOLOG_ADVIVCE"):
             case ("REASONS_FOR_REJECTION"):
-
-                TypesDocuments typesDocumentDog = TypesDocuments.valueOf(data);
-                DocumentDog documentDog = documentDogRepository.findDocumentDogByTypeDocumentDog(typesDocumentDog);
-
-                String text = documentDog.getText();
-                SendMessage sendMessage9 = new SendMessage(chatId, text);
-                telegramBot.execute(sendMessage9);
+                getDocumentsForAnimal(data, chatId);
                 break;
             case ("accept_record_contact"):
 
@@ -132,5 +127,25 @@ public class CallBackQueryHandler {
         BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
        TypesShelters typesShelters = botUser.getTypeShelter();
        return shelterRepository.findSheltersByTypeShelter(typesShelters);
+    }
+
+    private void getDocumentsForAnimal(String data, Object chatId){
+        //получить тип выбранного приюта пользователем
+        //в зависимости от выбранного приюта, вывести рекомендации для кошек/рекомендаии для собак
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+        TypesShelters typeShelter = botUser.getTypeShelter();
+        String text = null;
+        TypesDocuments typesDocument = TypesDocuments.valueOf(data);
+        if (typeShelter == TypesShelters.DOG_SHELTER) {
+            DocumentDog documentDog = documentDogRepository.findDocumentDogByTypeDocumentDog(typesDocument);
+            text = documentDog.getText();
+        } else {
+            TypesDocuments typesDocumentCat = TypesDocuments.valueOf(data);
+            DocumentCat documentCat = documentCatRepository.findDocumentCatByTypeDocumentCat(typesDocument);
+            text = documentCat.getText();
+        }
+        SendMessage sendMessage = new SendMessage(chatId, text);
+        telegramBot.execute(sendMessage);
+
     }
 }

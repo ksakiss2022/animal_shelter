@@ -174,9 +174,15 @@ public class CommandHandler {
 
 
     /*
-выводится список кнопок после выбора пункта "Как взять собаку из приюта"
+выводится список кнопок после выбора пункта "Как взять животное из приюта"
  */
     private void sendMessagesForAdoptDogFromShelter(Object chatId) {
+        //получить тип выбранного приюта пользователем
+        //в зависимости от выбранного приюта, вывести рекомендации для кошек/рекомендаии для собак
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+        TypesShelters typeShelter = botUser.getTypeShelter();
+
+
         //выводимое сообщение
         SendMessage sendMessage = new SendMessage(chatId.toString(), "Выберите нужный вид консультации");
         sendMessage.parseMode(ParseMode.Markdown);
@@ -200,12 +206,6 @@ public class CommandHandler {
         InlineKeyboardButton button6 = new InlineKeyboardButton("Рекомендации по обустройству дома для животного с ограниченными возможностями (зрение, передвижение)");
         button6.callbackData(BotState.ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES.getTitle());
 
-        InlineKeyboardButton button7 = new InlineKeyboardButton("Советы кинолога по первичному общению с собакой");
-        button7.callbackData(BotState.CYNOLOG_ADVIVCE.getTitle());
-
-        InlineKeyboardButton button8 = new InlineKeyboardButton("Рекомендации по проверенным кинологам для дальнейшего обращения к ним");
-        button8.callbackData(BotState.CYNOLOGISTS.getTitle());
-
         InlineKeyboardButton button9 = new InlineKeyboardButton("Список причин, почему могут отказать и не дать забрать собаку из приюта");
         button9.callbackData(BotState.REASONS_FOR_REJECTION.getTitle());
 
@@ -217,8 +217,18 @@ public class CommandHandler {
         keyboard.addRow(button4);
         keyboard.addRow(button5);
         keyboard.addRow(button6);
-        keyboard.addRow(button7);
-        keyboard.addRow(button8);
+
+        if(typeShelter==TypesShelters.DOG_SHELTER) {
+            InlineKeyboardButton button7 = new InlineKeyboardButton("Советы кинолога по первичному общению с собакой");
+            button7.callbackData(BotState.CYNOLOG_ADVIVCE.getTitle());
+
+            InlineKeyboardButton button8 = new InlineKeyboardButton("Рекомендации по проверенным кинологам для дальнейшего обращения к ним");
+            button8.callbackData(BotState.CYNOLOGISTS.getTitle());
+
+            keyboard.addRow(button7);
+            keyboard.addRow(button8);
+        }
+
         keyboard.addRow(button9);
 
         sendMessage.replyMarkup(keyboard);

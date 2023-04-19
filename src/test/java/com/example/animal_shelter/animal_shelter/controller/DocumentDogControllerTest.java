@@ -33,8 +33,6 @@ class DocumentDogControllerTest {
     @InjectMocks
     private DocumentDogController documentDogController;
 
-
-
     @Test
     void createDocumentDog() throws Exception{
         final TypesDocuments typeDocumentDog = TypesDocuments.DOCUMENTS_TO_ADOPT_ANIMAL;
