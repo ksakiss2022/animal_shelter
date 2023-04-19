@@ -1,6 +1,5 @@
 package com.example.animal_shelter.animal_shelter.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -20,9 +19,6 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(name = "chat_id", nullable = false)
-    private Long chatId;
 
     @Column(name = "ration", nullable = false)
     private String ration;
@@ -47,8 +43,11 @@ public class Report {
     @Column(name = "last_message_ms", nullable = false)
     private Long lastMessageMs;
 
-    @Column(name = "person_id", nullable = false)
-    private Long personId;
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
+
+//    @Column(name = "person_id", nullable = false)
+//    private Long personId;
 
 
 
@@ -96,13 +95,13 @@ public class Report {
         return id;
     }
 
-    public Long getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Long personId) {
-        this.personId = personId;
-    }
+//    public Long getPersonId() {
+//        return personId;
+//    }
+//
+//    public void setPersonId(Long personId) {
+//        this.personId = personId;
+//    }
 
     public String getCaption() {
         return caption;
@@ -204,7 +203,7 @@ public class Report {
                 ", caption='" + caption + '\'' +
                 ", lastMessage=" + lastMessage +
                 ", lastMessageMs=" + lastMessageMs +
-                ", personId=" + personId +
+//                ", personId=" + personId +
                 '}';
     }
 }

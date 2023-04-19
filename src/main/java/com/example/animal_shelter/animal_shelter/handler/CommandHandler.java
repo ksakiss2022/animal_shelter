@@ -3,7 +3,6 @@ package com.example.animal_shelter.animal_shelter.handler;
 import com.example.animal_shelter.animal_shelter.listener.TelegramBotUpdatesListener;
 import com.example.animal_shelter.animal_shelter.model.BotState;
 import com.example.animal_shelter.animal_shelter.model.BotUser;
-import com.example.animal_shelter.animal_shelter.model.Shelter;
 import com.example.animal_shelter.animal_shelter.model.TypesShelters;
 import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
@@ -15,18 +14,26 @@ import com.pengrad.telegrambot.response.SendResponse;
 import com.vdurmont.emoji.EmojiParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 @Component
 public class CommandHandler {
     private final TelegramBot telegramBot;
 
     private final ShelterRepository shelterRepository;
+
+    private final long telegramChatVolunteers = 1921555244;
+
+    private static final String INFO_ABOUT_REPORT = "Для отчета нужна следующая информация:\n" +
+            "- Фото животного.  \n" +
+            "- Рацион животного\n" +
+            "- Общее самочувствие и привыкание к новому месту\n" +
+            "- Изменение в поведении: отказ от старых привычек, приобретение новых.\nСкопируйте следующий пример. Не забудьте прикрепить фото";
+
+    private static final String REPORT_EXAMPLE = "Рацион: как в ресторане;\n" +
+            "Самочувствие: здоров как бык;\n" +
+            "Поведение: умильное;";
     private final BotUserRepository botUserRepository;
     private final CallBackQueryHandler callBackQueryHandler;
 
@@ -60,12 +67,17 @@ public class CommandHandler {
                 sendMessagesForAdoptDogFromShelter(user.id());
                 break;
             case ("Прислать отчет о питомце"): //действия для кнопки "Прислать отчет о питомце"
-                SendMessage sendMessage3 = new SendMessage(user.id(), "Нажата кнопка Прислать отчет о питомце");
+                SendMessage sendMessage3 = new SendMessage(user.id(), INFO_ABOUT_REPORT);
                 telegramBot.execute(sendMessage3);
+                SendMessage sendMessage31 = new SendMessage(user.id(), REPORT_EXAMPLE);
+                telegramBot.execute(sendMessage31);
                 break;
             case ("Позвать волонтера"): //действия для кнопки "Позвать волонтера"
-                SendMessage sendMessage4 = new SendMessage(user.id(), "Нажата кнопка Позвать волонтера");
+                SendMessage sendMessage4 = new SendMessage(user.id(), "Ваш запрос обработан. Подождите, пожалуйста, " +
+                        "в ближайшее время с Вами должен будет связаться волонтёр");
                 telegramBot.execute(sendMessage4);
+                sendMessage(telegramChatVolunteers,  "Пользователь "+ user.id() + " " + user.firstName() + " " +
+                        user.username() + " хочет связаться с " + "волонтёром. Перезвоните ему, пожалуйста!");
                 break;
 
             case "\uD83D\uDC31 CAT":
@@ -252,6 +264,11 @@ public class CommandHandler {
             LOG.info("code of error: {}", codeError);
             LOG.info("description -: {}", description);
         }
+    }
+
+    public void sendMessage(long chatId, String text) {
+        SendMessage message = new SendMessage(chatId, text);
+        telegramBot.execute(message);
     }
 
 

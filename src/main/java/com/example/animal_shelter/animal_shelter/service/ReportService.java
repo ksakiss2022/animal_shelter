@@ -1,6 +1,5 @@
 package com.example.animal_shelter.animal_shelter.service;
 
-import com.example.animal_shelter.animal_shelter.model.LocationMap;
 import com.example.animal_shelter.animal_shelter.model.Report;
 import com.example.animal_shelter.animal_shelter.repository.ReportRepository;
 import com.pengrad.telegrambot.model.File;
@@ -117,7 +116,7 @@ public class ReportService {
      */
     public void uploadReport(Long personId, byte[] pictureFile, File file, String ration, String health,
                              String habits, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports) throws IOException {
-        logger.info("Uploading report");
+        logger.info("Создание отчёта");
         Report report = new Report();
         report.setLastMessage(dateSendMessage);
         report.setDays(daysOfReports);
@@ -129,12 +128,14 @@ public class ReportService {
         report.setRation(ration);
         report.setHealth(health);
         report.setHabits(habits);
+        report.setCaption("отсутствует");
+        report.setChatId(personId);
         reportRepository.save(report);
     }
 
     public void uploadReport(Long personId, byte[] pictureFile, File file,
                              String caption, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports) throws IOException {
-        logger.info("Was invoked method to uploadReportData");
+        logger.info("Вызван метод для загрузки отчёта");
         Report report = new Report();
         report.setLastMessage(dateSendMessage);
         report.setDays(daysOfReports);
@@ -143,7 +144,11 @@ public class ReportService {
         report.setFileSize(file.fileSize());
         report.setData(pictureFile);
         report.setCaption(caption);
+        report.setChatId(personId);
         report.setLastMessageMs(timeDate);
+        report.setRation("не изменился");
+        report.setHealth("не изменилось");
+        report.setHabits("не изменились");
         reportRepository.save(report);
     }
 

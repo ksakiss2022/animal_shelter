@@ -2,17 +2,18 @@ package com.example.animal_shelter.animal_shelter.listener;
 
 import com.example.animal_shelter.animal_shelter.handler.CallBackQueryHandler;
 import com.example.animal_shelter.animal_shelter.handler.CommandHandler;
-import com.example.animal_shelter.animal_shelter.model.*;
+import com.example.animal_shelter.animal_shelter.model.PersonCat;
+import com.example.animal_shelter.animal_shelter.model.PersonDog;
+import com.example.animal_shelter.animal_shelter.model.Report;
 import com.example.animal_shelter.animal_shelter.repository.*;
 import com.example.animal_shelter.animal_shelter.service.ReportService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.*;
-import com.pengrad.telegrambot.model.request.*;
+import com.pengrad.telegrambot.model.File;
+import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.request.SendPhoto;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -33,16 +33,6 @@ import java.util.stream.Collectors;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
-
-    private static final String INFO_ABOUT_REPORT = "Для отчета нужна следующая информация:\n" +
-            "- Фото животного.  \n" +
-            "- Рацион животного\n" +
-            "- Общее самочувствие и привыкание к новому месту\n" +
-            "- Изменение в поведении: отказ от старых привычек, приобретение новых.\nСкопируйте следующий пример. Не забудьте прикрепить фото";
-
-    private static final String REPORT_EXAMPLE = "Рацион: ваш текст;\n" +
-            "Самочувствие: ваш текст;\n" +
-            "Поведение: ваш текст;";
 
     private static final String REGEX_MESSAGE = "(Рацион:)(\\s)(\\W+)(;)\n" +
             "(Самочувствие:)(\\s)(\\W+)(;)\n" +
@@ -105,52 +95,52 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             updates.forEach(update -> {
                 LOG.info("Processing update: {}", update);
 
-//                String nameUser = update.message().chat().firstName();
-//                String textUpdate = update.message().text();
-//                Integer messageId = update.message().messageId();
-//                long chatIdPerson = update.message().chat().id();
-//                Calendar calendar = new GregorianCalendar();
-//                daysOfReports = reportRepository.findAll().stream()
-//                        .filter(s -> s.getChatId() == chatIdPerson)
-//                        .count() + 1;
-//
-//                    long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
-//
-//                    Long lastMessageTime = reportRepository.findAll().stream()
-//                            .filter(s -> s.getChatId() == chatIdPerson)
-//                            .map(Report::getLastMessageMs).max(Long::compare).orElseGet(() -> null);
-//                    if (lastMessageTime != null) {
-//                        Date lastDateSendMessage = new Date(lastMessageTime * 1000);
-//                        long numberOfDay = lastDateSendMessage.getDate();
-//
-//                        if (daysOfReports < 30) {
-//                            if (compareTime != numberOfDay) {
-//                                //Обработка отчета ( Фото и текст)
-//                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-//                                    getReport(update);
-//                                }
-//                            } else {
-//                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-//                                    sendMessage(chatIdPerson, "Вы уже отправляли отчет сегодня");
-//                                }
-//                            }
-//                            if (daysOfReports == 31) {
-//                                sendMessage(chatIdPerson, "Вы прошли испытательный срок!");
-//                            }
-//                        }
-//                    } else {
-//                        if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-//                            getReport(update);
-//                        }
-//                    }
-//                    if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
-//                        sendMessage(chatIdPerson, "Отчет нужно присылать с описанием!");
-//                    }
-//
-//                    // Добавление имени и телефона в базу через кнопку оставить контакты
-//                    if (update.message() != null && update.message().contact() != null) {
-//                        shareContact(update);
-//                    }
+                String nameUser = update.message().chat().firstName();
+                String textUpdate = update.message().text();
+                Integer messageId = update.message().messageId();
+                long chatIdPerson = update.message().chat().id();
+                Calendar calendar = new GregorianCalendar();
+                daysOfReports = reportRepository.findAll().stream()
+                        .filter(s -> s.getChatId() == chatIdPerson)
+                        .count() + 1;
+
+                    long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
+
+                    Long lastMessageTime = reportRepository.findAll().stream()
+                            .filter(s -> s.getChatId() == chatIdPerson)
+                            .map(Report::getLastMessageMs).max(Long::compare).orElseGet(() -> null);
+                    if (lastMessageTime != null) {
+                        Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                        long numberOfDay = lastDateSendMessage.getDate();
+
+                        if (daysOfReports < 30) {
+                            if (compareTime != numberOfDay) {
+                                //Обработка отчета ( Фото и текст)
+                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                    getReport(update);
+                                }
+                            } else {
+                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                    sendMessage(chatIdPerson, "Вы уже отправляли отчет сегодня");
+                                }
+                            }
+                            if (daysOfReports == 31) {
+                                sendMessage(chatIdPerson, "Вы прошли испытательный срок!");
+                            }
+                        }
+                    } else {
+                        if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                            getReport(update);
+                        }
+                    }
+                    if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
+                        sendMessage(chatIdPerson, "Отчет нужно присылать с описанием!");
+                    }
+
+                    // Добавление имени и телефона в базу через кнопку оставить контакты
+                    if (update.message() != null && update.message().contact() != null) {
+                        shareContact(update);
+                    }
 
 
                 if (update.callbackQuery() != null) {
