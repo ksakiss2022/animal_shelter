@@ -1,5 +1,6 @@
 package com.example.animal_shelter.animal_shelter.handler;
 
+import com.example.animal_shelter.animal_shelter.listener.TelegramBotUpdatesListener;
 import com.example.animal_shelter.animal_shelter.model.*;
 import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
 import com.example.animal_shelter.animal_shelter.repository.DocumentDogRepository;
@@ -13,6 +14,8 @@ import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
 import com.pengrad.telegrambot.response.SendResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +24,6 @@ public class CallBackQueryHandler {
 
     private final TelegramBot telegramBot;
 
-    private Long shelterId = Long.valueOf(1); // временно задала значение. Надо сделать выбор и сохранение значения
-
     private final ShelterRepository shelterRepository;
 
     private final LocationMapRepository locationMapRepository;
@@ -30,6 +31,7 @@ public class CallBackQueryHandler {
     private final DocumentDogRepository documentDogRepository;
     private final BotUserRepository botUserRepository;
 
+    private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
 
     public CallBackQueryHandler(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, BotUserRepository botUserRepository) {
@@ -47,9 +49,7 @@ public class CallBackQueryHandler {
         handleInputMessage(update);
     }
 
-    /*
-    Различные обработчики выбранных пользователем команд
-     */
+
     public void handleInputMessage(Update update) {
 
         Object chatId = update.callbackQuery().message().chat().id();
@@ -63,49 +63,35 @@ public class CallBackQueryHandler {
         handleInputData(chatId, data);
     }
 
-    public void handleInputData( Object chatId ,String data  ){
+    /*
+        Различные обработчики выбранных пользователем команд
+    */
+    public void handleInputData( Object chatId ,String data ){
         switch (data) {
 
-//            case ("shelter_information")://действия для кнопки "Узнать информацию о приюте"
-//                sendMessagesForShelterInformation(chatId);
-//                break;
-//            case ("adopt_doc_from_shelter"): //действия для кнопки "Как взять собаку из приюта"
-////                SendMessage sendMessage2 = new SendMessage(chatId, "Нажата кнопка Как взять собаку из приюта");
-////                telegramBot.execute(sendMessage2);
-//                sendMessagesForAdoptDogFromShelter(chatId);
-//                break;
-//            case ("send_pet_report"): //действия для кнопки "Прислать отчет о питомце"
-//                SendMessage sendMessage3 = new SendMessage(chatId, "Нажата кнопка Прислать отчет о питомце");
-//                telegramBot.execute(sendMessage3);
-//                break;
-//            case ("call_volunteer"): //действия для кнопки "Позвать волонтера"
-//                SendMessage sendMessage4 = new SendMessage(chatId, "Нажата кнопка Позвать волонтера");
-//                telegramBot.execute(sendMessage4);
-//                break;
-//
             case ("shelter_tell"): // кнопка "Рассказать о приюте"
-                Shelter shelter = shelterRepository.findById(shelterId).get();
+                Shelter shelter = getShelterByChatId(chatId);
                 String information = shelter.getInformation();
                 SendMessage sendMessage5 = new SendMessage(chatId, information);
                 telegramBot.execute(sendMessage5);
                 break;
 
             case ("shelter_address"): //кнопка "Адрес приюта"
-                Shelter shelter1 = shelterRepository.findById(shelterId).get();
+                Shelter shelter1 = getShelterByChatId(chatId);
                 String address = shelter1.getAddress();
                 SendMessage sendMessage6 = new SendMessage(chatId, address);
                 telegramBot.execute(sendMessage6);
                 break;
 
             case ("shelter_schedule")://кнопка "Расписание приюта"
-                Shelter shelter2 = shelterRepository.findById(shelterId).get();
+                Shelter shelter2 = getShelterByChatId(chatId);
                 String schedule = shelter2.getSchedule();
                 SendMessage sendMessage7 = new SendMessage(chatId, schedule);
                 telegramBot.execute(sendMessage7);
                 break;
 
             case ("safety_recommendations")://кнопка "Рекомендации о технике безопасности на территории приюта."
-                Shelter shelter3 = shelterRepository.findById(shelterId).get();
+                Shelter shelter3 = getShelterByChatId(chatId);
                 String safetyRecommendations = shelter3.getSafetyRecommendations();
                 SendMessage sendMessage8 = new SendMessage(chatId, safetyRecommendations);
                 telegramBot.execute(sendMessage8);
@@ -113,7 +99,8 @@ public class CallBackQueryHandler {
 
 
             case ("shelter_location_map")://кнопка "Схема проезда к приюту"
-                LocationMap locationMap = locationMapRepository.findLocationMapByShelterId(shelterId).get();
+                Shelter shelter4 = getShelterByChatId(chatId);
+                LocationMap locationMap = locationMapRepository.findLocationMapByShelterId(shelter4.getId()).get();
                 SendPhoto sendPhoto = new SendPhoto(chatId, locationMap.getData());
                 telegramBot.execute(sendPhoto);
                 break;
@@ -136,63 +123,14 @@ public class CallBackQueryHandler {
                 SendMessage sendMessage9 = new SendMessage(chatId, text);
                 telegramBot.execute(sendMessage9);
                 break;
-
             case ("accept_record_contact"):
 
         }
-
-        if (data.startsWith("Выбран приют")) {
-
-            //запомнить выбранный приют
-            String part = data.replace("Выбран приют -", "");
-            shelterId = Long.valueOf(part);
-            //вывести список команд главного меню
-            sendMainMenuHandler(chatId);
-            return;
-        }
-
     }
 
-
-
-
-    // }
-    /*
-    После выбора приюта предлагается список команд для дальнейшей работы:
-    - Узнать информацию о приюте (этап 1).
-    - Как взять собаку из приюта (этап 2).
-    - Прислать отчет о питомце (этап 3).
-    - Позвать волонтера.
-     */
-    public void sendMainMenuHandler(Object chatId) {
-        SendMessage sendMessage = new SendMessage(chatId, "Выбран приют - " + shelterRepository.findById(shelterId).get().getName());
-     //   logger.info("Method sendMenuTakeAnimal has been run: {}, {}", chatId, "вызвали Как взять питомца из приюта");
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Информация о возможностях бота"),
-                new KeyboardButton("Узнать информацию о приюте"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Как взять питомца из приюта"),
-                new KeyboardButton("Прислать отчет о питомце"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
-
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, Long.valueOf(chatId.toString()), "Главное меню");
-
+    public Shelter getShelterByChatId(Object chatId){
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+       TypesShelters typesShelters = botUser.getTypeShelter();
+       return shelterRepository.findSheltersByTypeShelter(typesShelters);
     }
-    public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
-        replyKeyboardMarkup.resizeKeyboard(true);
-        replyKeyboardMarkup.oneTimeKeyboard(false);
-        replyKeyboardMarkup.selective(false);
-        SendMessage request = new SendMessage(chatId, text)
-                .replyMarkup(replyKeyboardMarkup)
-                .parseMode(ParseMode.HTML)
-                .disableWebPagePreview(true);
-        SendResponse sendResponse = telegramBot.execute(request);
-        if (!sendResponse.isOk()) {
-            int codeError = sendResponse.errorCode();
-            String description = sendResponse.description();
-//            logger.info("code of error: {}", codeError);
-//            logger.info("description -: {}", description);
-        }
-    }
-
-
 }

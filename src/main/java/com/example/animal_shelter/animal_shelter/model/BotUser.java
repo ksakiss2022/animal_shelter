@@ -1,9 +1,9 @@
 package com.example.animal_shelter.animal_shelter.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
@@ -13,6 +13,12 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "bot_user")
+@TypeDef(
+        name = "types_shelters",
+        typeClass  = PostgreSQLEnumType.class
+)
+
+
 public class BotUser {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +33,18 @@ public class BotUser {
     @Column(name = "shelter_id")
     private Long shelterId;
 
+    @Type(type = "types_shelters")
+    @Column(name = "type_shelter", columnDefinition = "type_shelter")
+    @Enumerated(EnumType.STRING)
+    private TypesShelters typeShelter;
+
+
     public BotUser() {
+    }
+
+    public BotUser(Long id, TypesShelters typeShelter) {
+        this.id = id;
+        this.typeShelter = typeShelter;
     }
 
     public BotUser(Long id) {
@@ -66,6 +83,14 @@ public class BotUser {
         this.shelterId = shelterId;
     }
 
+    public TypesShelters getTypeShelter() {
+        return typeShelter;
+    }
+
+    public void setTypeShelter(TypesShelters typeShelter) {
+        this.typeShelter = typeShelter;
+    }
+
     @Override
     public String toString() {
         return "BotUser{" +
@@ -73,6 +98,7 @@ public class BotUser {
                 ", lastRequest='" + lastRequest + '\'' +
                 ", contact='" + contact + '\'' +
                 ", shelterId=" + shelterId +
+                ", typeShelter=" + typeShelter +
                 '}';
     }
 
@@ -81,11 +107,11 @@ public class BotUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BotUser botUser = (BotUser) o;
-        return Objects.equals(id, botUser.id) && Objects.equals(lastRequest, botUser.lastRequest) && Objects.equals(contact, botUser.contact) && Objects.equals(shelterId, botUser.shelterId);
+        return Objects.equals(id, botUser.id) && Objects.equals(lastRequest, botUser.lastRequest) && Objects.equals(contact, botUser.contact) && Objects.equals(shelterId, botUser.shelterId) && typeShelter == botUser.typeShelter;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lastRequest, contact, shelterId);
+        return Objects.hash(id, lastRequest, contact, shelterId, typeShelter);
     }
 }

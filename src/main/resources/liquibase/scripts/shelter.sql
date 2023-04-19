@@ -219,3 +219,7 @@ create type types_shelters as enum (
 
 ALTER TABLE shelter
         ADD COLUMN type_shelter types_shelters NOT NULL ;
+
+-- changeset salimgareeva:12
+ALTER TABLE bot_user
+    ADD COLUMN type_shelter types_shelters NOT NULL ;

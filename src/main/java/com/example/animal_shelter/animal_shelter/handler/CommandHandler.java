@@ -1,20 +1,25 @@
 package com.example.animal_shelter.animal_shelter.handler;
 
+import com.example.animal_shelter.animal_shelter.listener.TelegramBotUpdatesListener;
 import com.example.animal_shelter.animal_shelter.model.BotState;
 import com.example.animal_shelter.animal_shelter.model.BotUser;
 import com.example.animal_shelter.animal_shelter.model.Shelter;
+import com.example.animal_shelter.animal_shelter.model.TypesShelters;
 import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.User;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
+import com.vdurmont.emoji.EmojiParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 @Component
@@ -24,6 +29,10 @@ public class CommandHandler {
     private final ShelterRepository shelterRepository;
     private final BotUserRepository botUserRepository;
     private final CallBackQueryHandler callBackQueryHandler;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+
+
 
     public CommandHandler(TelegramBot telegramBot, ShelterRepository shelterRepository, BotUserRepository botUserRepository, CallBackQueryHandler callBackQueryHandler) {
         this.telegramBot = telegramBot;
@@ -37,14 +46,12 @@ public class CommandHandler {
         try {
         switch (text) {
             case "Главное меню":
+            case "Вернуться в меню":
                // keyBoardShelter.sendMenu(chatId);
-                callBackQueryHandler.sendMainMenuHandler(user.id());
+                sendMainMenuHandler(user.id());
                 break;
             case "Информация о возможностях бота":
                 //sendMenuInfoShelter(user.id());
-                break;
-            case "Вернуться в меню":
-                callBackQueryHandler.sendMainMenuHandler(user.id());
                 break;
             case ("Узнать информацию о приюте")://действия для кнопки "Узнать информацию о приюте"
                 sendMessagesForShelterInformation(user.id());
@@ -60,12 +67,24 @@ public class CommandHandler {
                 SendMessage sendMessage4 = new SendMessage(user.id(), "Нажата кнопка Позвать волонтера");
                 telegramBot.execute(sendMessage4);
                 break;
-        }
 
-        if ("/start".equals(text)) { // Если пользователь ввел "/start", то выводится Приветствие и список кнопок для дальнейшей работы
-            sendWelcomeMessage(user);
+            case "\uD83D\uDC31 CAT":
+                //запомнить выбранный приют
+               BotUser botUser = botUserRepository.save(new BotUser(Long.valueOf(user.id().toString()),TypesShelters.CAT_SHELTER) );
+                //вывести список команд главного меню
+                sendMainMenuHandler(user.id());
+                break;
+            case "\uD83D\uDC36 DOG":
+                //запомнить выбранный приют
+                BotUser botUser1 = botUserRepository.save(new BotUser(Long.valueOf(user.id().toString()),TypesShelters.DOG_SHELTER ));
+                //вывести список команд главного меню
+                sendMainMenuHandler(user.id());
+                break;        }
 
-        }
+            if ("/start".equals(text)) { // Если пользователь ввел "/start", то выводится Приветствие и список кнопок для дальнейшей работы
+                sendWelcomeMessage(user);
+            }
+
         } catch (NullPointerException e) {
             System.out.println("Некорректная команда!");
         }
@@ -79,42 +98,34 @@ public class CommandHandler {
         sendMessage.parseMode(ParseMode.Markdown);
         telegramBot.execute(sendMessage);
 
-        // если история по пользователю есть, то вывести последний запрос
+        // если история по пользователю есть, то выводить главное меню
         //если нет -  выводить выбор приюта
         BotUser botUser = botUserRepository.findBotUserById(user.id());
-        String lastRequest = null;
+        TypesShelters typeShelter = null;
         if (botUser != null) {
-
-           // lastRequest = botUser.getLastRequest();
-            if (lastRequest != null) {
-                //выводить последний запрос
-             //   callBackQueryHandler.handleInputData(user.id(), lastRequest);
+            typeShelter = botUser.getTypeShelter();
+            if (typeShelter != null) {
+                //выводить главное меню
+                sendMainMenuHandler(user.id());
             }
         }
-        else {
-            botUser = botUserRepository.save(new BotUser(user.id()));
-        }
-
-        if (lastRequest == null) {
-
+        if (typeShelter == null) {
+            LOG.info("Method sendMessage has been run: {}, {}", user.id(), "Вызвано меню выбора ");
             //получить список приютов и вывести их в команды
             SendMessage sendMessage1 = new SendMessage(user.id(), "Выберите приют");
             sendMessage1.parseMode(ParseMode.Markdown);
+            String emojiCat = EmojiParser.parseToUnicode(":cat:");
+            String emojiDog = EmojiParser.parseToUnicode(":dog:");
 
-            Collection<Shelter> shelters = shelterRepository.findAll();
-            InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
-            for (Shelter shelter : shelters) {
-                InlineKeyboardButton button1 = new InlineKeyboardButton(shelter.getName());
-                button1.callbackData("Выбран приют -" + shelter.getId());
-                keyboard.addRow(button1);
-            }
-            sendMessage1.replyMarkup(keyboard);
-            telegramBot.execute(sendMessage1);
+            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                    new KeyboardButton(emojiCat + " CAT"));
+            replyKeyboardMarkup.addRow(new KeyboardButton(emojiDog + " DOG"));
+
+            returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, user.id(), "Выберите, кого хотите приютить:");
         }
     }
 
-
-    /*
+/*
 выводится список кнопок после выбора пункта "Узнать информацию о приюте"
  */
     private void sendMessagesForShelterInformation(Object chatId) {
@@ -137,12 +148,6 @@ public class CommandHandler {
         InlineKeyboardButton button5 = new InlineKeyboardButton("Общие рекомендации о технике безопасности на территории приюта");
         button5.callbackData(BotState.SAFETY_RECOMMENDATIONS.getTitle());
 
-        InlineKeyboardButton button6 = new InlineKeyboardButton("Принять и записать контактные данные для связи");
-        button6.callbackData(BotState.ACCEPT_RECORD_CONTACT.getTitle());
-
-        InlineKeyboardButton button7 = new InlineKeyboardButton("Позвать волонтера");
-        button7.callbackData(BotState.CALL_VOLUNTEER.getTitle());
-
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
         keyboard.addRow(button1);
@@ -150,8 +155,6 @@ public class CommandHandler {
         keyboard.addRow(button3);
         keyboard.addRow(button4);
         keyboard.addRow(button5);
-        keyboard.addRow(button6);
-        keyboard.addRow(button7);
 
         sendMessage.replyMarkup(keyboard);
         telegramBot.execute(sendMessage);
@@ -194,12 +197,6 @@ public class CommandHandler {
         InlineKeyboardButton button9 = new InlineKeyboardButton("Список причин, почему могут отказать и не дать забрать собаку из приюта");
         button9.callbackData(BotState.REASONS_FOR_REJECTION.getTitle());
 
-        InlineKeyboardButton button10 = new InlineKeyboardButton("Принять и записать контактные данные для связи");
-        button10.callbackData(BotState.ACCEPT_RECORD_CONTACT.getTitle());
-
-        InlineKeyboardButton button11 = new InlineKeyboardButton("Позвать волонтера");
-        button11.callbackData(BotState.CALL_VOLUNTEER.getTitle());
-
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
 
         keyboard.addRow(button1);
@@ -211,13 +208,51 @@ public class CommandHandler {
         keyboard.addRow(button7);
         keyboard.addRow(button8);
         keyboard.addRow(button9);
-        keyboard.addRow(button10);
-        keyboard.addRow(button11);
 
         sendMessage.replyMarkup(keyboard);
         telegramBot.execute(sendMessage);
     }
 
+    /*
+    После выбора приюта предлагается список команд для дальнейшей работы:
+    - Узнать информацию о приюте (этап 1).
+    - Как взять собаку из приюта (этап 2).
+    - Прислать отчет о питомце (этап 3).
+    - Позвать волонтера.
+     */
+    public void sendMainMenuHandler(Object chatId) {
+        LOG.info("Method sendMainMenuHandler has been run: {}, {}", chatId, "вызвали Главное меню");
+
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+        TypesShelters typeShelter = botUser.getTypeShelter();
+
+        SendMessage sendMessage = new SendMessage(chatId, "Выбран " + typeShelter);
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
+                new KeyboardButton("Информация о возможностях бота"),
+                new KeyboardButton("Узнать информацию о приюте"));
+        replyKeyboardMarkup.addRow(new KeyboardButton("Как взять питомца из приюта"),
+                new KeyboardButton("Прислать отчет о питомце"));
+        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
+
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, Long.valueOf(chatId.toString()), "Главное меню");
+
+    }
+    public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
+        replyKeyboardMarkup.resizeKeyboard(true);
+        replyKeyboardMarkup.oneTimeKeyboard(false);
+        replyKeyboardMarkup.selective(false);
+        SendMessage request = new SendMessage(chatId, text)
+                .replyMarkup(replyKeyboardMarkup)
+                .parseMode(ParseMode.HTML)
+                .disableWebPagePreview(true);
+        SendResponse sendResponse = telegramBot.execute(request);
+        if (!sendResponse.isOk()) {
+            int codeError = sendResponse.errorCode();
+            String description = sendResponse.description();
+            LOG.info("code of error: {}", codeError);
+            LOG.info("description -: {}", description);
+        }
+    }
 
 
 }
