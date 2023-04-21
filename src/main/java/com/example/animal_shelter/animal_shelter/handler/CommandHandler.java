@@ -7,6 +7,7 @@ import com.example.animal_shelter.animal_shelter.model.TypesShelters;
 import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -39,7 +40,10 @@ public class CommandHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-
+    private static final String infoAboutBot = "Информация о возможностях бота \n- Бот может показать информацию о приюте \n" +
+            "- Покажет какие документы нужны \n- Бот может принимать ежедневный отчет о питомце\n" +
+            "- Может передать контактные данные волонтерам для связи" +
+            "";
 
     public CommandHandler(TelegramBot telegramBot, ShelterRepository shelterRepository, BotUserRepository botUserRepository, CallBackQueryHandler callBackQueryHandler) {
         this.telegramBot = telegramBot;
@@ -58,7 +62,8 @@ public class CommandHandler {
                 sendMainMenuHandler(user.id());
                 break;
             case "Информация о возможностях бота":
-                //sendMenuInfoShelter(user.id());
+               // sendMenuInfoShelter(user.id());
+                sendMessage(user.id(), infoAboutBot);
                 break;
             case ("Узнать информацию о приюте")://действия для кнопки "Узнать информацию о приюте"
                 sendMessagesForShelterInformation(user.id());
@@ -91,7 +96,8 @@ public class CommandHandler {
                 BotUser botUser1 = botUserRepository.save(new BotUser(Long.valueOf(user.id().toString()),TypesShelters.DOG_SHELTER ));
                 //вывести список команд главного меню
                 sendMainMenuHandler(user.id());
-                break;        }
+                break;
+        }
 
             if ("/start".equals(text)) { // Если пользователь ввел "/start", то выводится Приветствие и список кнопок для дальнейшей работы
                 sendWelcomeMessage(user);
@@ -106,7 +112,7 @@ public class CommandHandler {
 отправляет  приветственное сообщение и предлагает список приютов для выбора
 */
     private void sendWelcomeMessage(User user) {
-        SendMessage sendMessage = new SendMessage(user.id(), "Привет!\n Меня создали Коробейникова Светлана, Салимгареева Маргарита и Кулаков Николай.\n " + "Они проходят обучение по курсу Java - разработчик. " + "\n Я буду многофункциональным ботом, отвечающим за приюты собак и кошек \n " + "Но пока ещё я мало что умею делать :-)");
+        SendMessage sendMessage = new SendMessage(user.id(), "Привет!\nМеня создали Коробейникова Светлана, Салимгареева Маргарита и Кулаков Николай.\n" + "Они проходят обучение по курсу Java - разработчик. " + "\nЯ буду многофункциональным ботом, отвечающим за приюты собак и кошек");
         sendMessage.parseMode(ParseMode.Markdown);
         telegramBot.execute(sendMessage);
 
@@ -206,7 +212,7 @@ public class CommandHandler {
         InlineKeyboardButton button6 = new InlineKeyboardButton("Рекомендации по обустройству дома для животного с ограниченными возможностями (зрение, передвижение)");
         button6.callbackData(BotState.ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES.getTitle());
 
-        InlineKeyboardButton button9 = new InlineKeyboardButton("Список причин, почему могут отказать и не дать забрать собаку из приюта");
+        InlineKeyboardButton button9 = new InlineKeyboardButton("Список причин, почему могут отказать и не дать забрать животное из приюта");
         button9.callbackData(BotState.REASONS_FOR_REJECTION.getTitle());
 
         InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();
@@ -254,7 +260,10 @@ public class CommandHandler {
                 new KeyboardButton("Узнать информацию о приюте"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Как взять питомца из приюта"),
                 new KeyboardButton("Прислать отчет о питомце"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
+        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"),
+                new KeyboardButton("Оставить контактные данные").requestContact(true));
+
+
 
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, Long.valueOf(chatId.toString()), "Главное меню");
 
@@ -280,8 +289,6 @@ public class CommandHandler {
         SendMessage message = new SendMessage(chatId, text);
         telegramBot.execute(message);
     }
-
-
 }
 
 
