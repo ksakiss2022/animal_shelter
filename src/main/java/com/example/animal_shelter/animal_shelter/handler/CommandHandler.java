@@ -7,7 +7,6 @@ import com.example.animal_shelter.animal_shelter.model.TypesShelters;
 import com.example.animal_shelter.animal_shelter.repository.BotUserRepository;
 import com.example.animal_shelter.animal_shelter.repository.ShelterRepository;
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.User;
 import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -30,7 +29,7 @@ public class CommandHandler {
             "- Фото животного.  \n" +
             "- Рацион животного\n" +
             "- Общее самочувствие и привыкание к новому месту\n" +
-            "- Изменение в поведении: отказ от старых привычек, приобретение новых.\nСкопируйте следующий пример. Не забудьте прикрепить фото";
+            "- Изменение в поведении: отказ от cтарых привычек, приобретение новых.\nСкопируйте следующий пример. Не забудьте прикрепить фото";
 
     private static final String REPORT_EXAMPLE = "Рацион: как в ресторане;\n" +
             "Самочувствие: здоров как бык;\n" +
