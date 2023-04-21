@@ -5,6 +5,8 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,7 +18,7 @@ import java.util.Objects;
 @Table(name = "shelter")
 @TypeDef(
         name = "types_shelters",
-        typeClass  = PostgreSQLEnumType.class
+        typeClass = PostgreSQLEnumType.class
 )
 public class Shelter {
     @Id
@@ -136,4 +138,5 @@ public class Shelter {
     public void setTypeShelter(TypesShelters typeShelter) {
         this.typeShelter = typeShelter;
     }
+
 }
