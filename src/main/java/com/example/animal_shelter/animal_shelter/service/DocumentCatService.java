@@ -43,9 +43,16 @@ public class DocumentCatService {
      */
     public DocumentCat editDocumentCat(DocumentCat documentCat) {
         logger.debug("Edit DocumentCat:{}", documentCat);
-        final var document1 = documentCatRepository.save(documentCat);
-        logger.debug("documentCat (edit) is{}", document1);
-        return document1;
+
+        if(documentCatRepository.findDocumentCatByTypeDocumentCat(documentCat.getTypeDocumentCat()).equals(documentCat)) {
+            final var document1 = documentCatRepository.save(documentCat);
+            logger.debug("documentCat (edit) is{}", document1);
+            return document1;
+        } else {
+            logger.debug("No document cat found with id {}", documentCat.getTypeDocumentCat());
+            return null;
+        }
+
     }
 
     /**

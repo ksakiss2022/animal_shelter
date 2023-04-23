@@ -23,7 +23,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.*;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -102,12 +107,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 String textUpdate = update.message().text();
                 Integer messageId = update.message().messageId();
                 long chatIdPerson = update.message().chat().id();
-                Calendar calendar = new GregorianCalendar();
                 daysOfReports = reportRepository.findAll().stream()
                         .filter(s -> s.getChatId() == chatIdPerson)
                         .count() + 1;
 
-                    long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
+                    long compareTime = LocalDate.now().getDayOfMonth();
 
                     Long lastMessageTime = reportRepository.findAll().stream()
                             .filter(s -> s.getChatId() == chatIdPerson)
@@ -265,7 +269,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     public void checkResults() {
         if (daysOfReports < 30) {
             var twoDay = TimeUnit.DAYS.toMillis(2);
-            var nowTime = new Date().getTime() - twoDay;
+            LocalDateTime localDateTime = LocalDateTime.now();
+            long nowTime = Timestamp.valueOf(localDateTime).getTime() - twoDay;
             var getDistinct = reportRepository.findAll().stream()
                     .sorted(Comparator.comparing(Report::getChatId))
                     .max(Comparator.comparing(Report::getLastMessageMs));

@@ -3,14 +3,11 @@ package com.example.animal_shelter.animal_shelter.handler;
 import com.example.animal_shelter.animal_shelter.listener.TelegramBotUpdatesListener;
 import com.example.animal_shelter.animal_shelter.model.*;
 import com.example.animal_shelter.animal_shelter.repository.*;
-import com.example.animal_shelter.animal_shelter.service.BotUserService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.model.request.*;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
-import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -29,6 +26,12 @@ public class CallBackQueryHandler {
     private final DocumentCatRepository documentCatRepository;
     private final BotUserRepository botUserRepository;
 
+    private static final String SHELTER_TELL = "shelter_tell";
+    private static final String SHELTER_ADDRESS = "shelter_address";
+    private static final String SHELTER_SCHEDULE = "shelter_schedule";
+    private static final String SAFETY_RECOMMENDATIONS = "safety_recommendations";
+    private static final String SHELTER_LOCATION_MAP = "shelter_location_map";
+
     private static final Logger LOG = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
 
@@ -45,7 +48,7 @@ public class CallBackQueryHandler {
     }
 
     public void handle(@NonNull CallbackQuery callbackQuery, Update update, TelegramBot telegramBot) {
-        Object chatId = callbackQuery.message().chat().id();
+        Long chatId = callbackQuery.message().chat().id();
         String data = callbackQuery.data();
         handleInputMessage(update);
     }
@@ -53,7 +56,7 @@ public class CallBackQueryHandler {
 
     public void handleInputMessage(Update update) {
 
-        Object chatId = update.callbackQuery().message().chat().id();
+        Long chatId = update.callbackQuery().message().chat().id();
          String data = update.callbackQuery().data();
 
         //сохранить последний запрос
@@ -67,31 +70,31 @@ public class CallBackQueryHandler {
     /*
         Различные обработчики выбранных пользователем команд
     */
-    public void handleInputData( Object chatId ,String data ){
+    public void handleInputData( Long chatId ,String data ){
         switch (data) {
 
-            case ("shelter_tell"): // кнопка "Рассказать о приюте"
+            case (SHELTER_TELL): // кнопка "Рассказать о приюте"
                 Shelter shelter = getShelterByChatId(chatId);
                 String information = shelter.getInformation();
                 SendMessage sendMessage5 = new SendMessage(chatId, information);
                 telegramBot.execute(sendMessage5);
                 break;
 
-            case ("shelter_address"): //кнопка "Адрес приюта"
+            case (SHELTER_ADDRESS): //кнопка "Адрес приюта"
                 Shelter shelter1 = getShelterByChatId(chatId);
                 String address = shelter1.getAddress();
                 SendMessage sendMessage6 = new SendMessage(chatId, address);
                 telegramBot.execute(sendMessage6);
                 break;
 
-            case ("shelter_schedule")://кнопка "Расписание приюта"
+            case (SHELTER_SCHEDULE)://кнопка "Расписание приюта"
                 Shelter shelter2 = getShelterByChatId(chatId);
                 String schedule = shelter2.getSchedule();
                 SendMessage sendMessage7 = new SendMessage(chatId, schedule);
                 telegramBot.execute(sendMessage7);
                 break;
 
-            case ("safety_recommendations")://кнопка "Рекомендации о технике безопасности на территории приюта."
+            case (SAFETY_RECOMMENDATIONS)://кнопка "Рекомендации о технике безопасности на территории приюта."
                 Shelter shelter3 = getShelterByChatId(chatId);
                 String safetyRecommendations = shelter3.getSafetyRecommendations();
                 SendMessage sendMessage8 = new SendMessage(chatId, safetyRecommendations);
@@ -99,7 +102,7 @@ public class CallBackQueryHandler {
                 break;
 
 
-            case ("shelter_location_map")://кнопка "Схема проезда к приюту"
+            case (SHELTER_LOCATION_MAP)://кнопка "Схема проезда к приюту"
                 Shelter shelter4 = getShelterByChatId(chatId);
                 LocationMap locationMap = locationMapRepository.findLocationMapByShelterId(shelter4.getId()).get();
                 SendPhoto sendPhoto = new SendPhoto(chatId, locationMap.getData());
@@ -123,13 +126,13 @@ public class CallBackQueryHandler {
         }
     }
 
-    public Shelter getShelterByChatId(Object chatId){
+    public Shelter getShelterByChatId(Long chatId){
         BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
        TypesShelters typesShelters = botUser.getTypeShelter();
        return shelterRepository.findSheltersByTypeShelter(typesShelters);
     }
 
-    private void getDocumentsForAnimal(String data, Object chatId){
+    private void getDocumentsForAnimal(String data, Long chatId){
         //получить тип выбранного приюта пользователем
         //в зависимости от выбранного приюта, вывести рекомендации для кошек/рекомендаии для собак
         BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));

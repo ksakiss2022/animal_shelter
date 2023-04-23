@@ -44,9 +44,14 @@ public class DocumentDogService {
      */
     public DocumentDog editDocumentDog(DocumentDog documentDog) {
         logger.debug("Edit DocumentDog:{}", documentDog);
-        final var document1 = documentDogRepository.save(documentDog);
-        logger.debug("DocumentDog (edit) is{}", document1);
-        return document1;
+        if(documentDogRepository.findDocumentDogByTypeDocumentDog(documentDog.getTypeDocumentDog()).equals(documentDog)) {
+            final var document1 = documentDogRepository.save(documentDog);
+            logger.debug("documentDog (edit) is{}", document1);
+            return document1;
+        } else {
+            logger.debug("No document dog found with id {}", documentDog.getTypeDocumentDog());
+            return null;
+        }
     }
 
     /**
