@@ -58,10 +58,12 @@ public class CatService {
      * Метод deleteCat удаляет из базы данных ранее внесенную информацию о <b>кошках</b> в базу данных.
      *
      * @param id идентификатор искомой <b>кошки</b>, <u>не может быть null</u>.
+     * @return
      */
-    public void deleteCat(long id) {
+    public Cat deleteCat(long id) {
         logger.debug("Delete cat:{}", id);
         catRepository.deleteById(id);
+        return null;
     }
 
     /**
