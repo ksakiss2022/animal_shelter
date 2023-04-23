@@ -95,7 +95,11 @@ public class Report {
         return id;
     }
 
-//    public Long getPersonId() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    //    public Long getPersonId() {
 //        return personId;
 //    }
 //

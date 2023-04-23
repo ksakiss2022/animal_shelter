@@ -84,32 +84,6 @@ public class ReportService {
     }
 
     /**
-     * Метод findReportsByChatId ищет отчёты по данному параметру.
-     *
-     * @param id параметр со значением данных.
-     * @return найденные <b>отчёты</b>.
-     */
-    public Collection<Report> findReportsByChatId(Long id) {
-        logger.debug("Find reports by chat_id :{}", id);
-        final var findReports = reportRepository.findListByChatId(id);
-        logger.debug("Reports by chat_id is{}", findReports);
-        return findReports;
-    }
-
-    /**
-     * Метод findReportByChatId ищет нужный отчёт.
-     *
-     * @param id параметр со значением данных.
-     * @return найденный <b>отчёт</b>.
-     */
-    public Report findReportByChatId(Long id) {
-        logger.debug("Find report by chat_id :{}", id);
-        final var findReport = reportRepository.findByChatId(id);
-        logger.debug("Reports by chat_id is{}", findReport);
-        return findReport;
-    }
-
-    /**
      * Метод uploadReport загружает  <b>отчёт </b>.
      *
      * @param personId параметр со значением данных <b>отчёта</b>.
