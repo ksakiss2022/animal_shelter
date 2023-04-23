@@ -1,7 +1,6 @@
 package com.example.animal_shelter.animal_shelter.service;
 
 
-import com.example.animal_shelter.animal_shelter.model.Cat;
 import com.example.animal_shelter.animal_shelter.model.Dog;
 import com.example.animal_shelter.animal_shelter.repository.DogRepository;
 import org.slf4j.Logger;
@@ -102,5 +101,10 @@ public class DogService {
         final var findDogByNameDogContainsIgnoreCase = dogRepository.findDogByNameDogContainsIgnoreCase(nameDog);
         logger.debug("Dog by nameDog is{}", findDogByNameDogContainsIgnoreCase);
         return findDogByNameDogContainsIgnoreCase;
+    }
+
+    public Dog getById(Long id) {
+        logger.info("Was invoked method to get a dog by id={}", id);
+        return dogRepository.findById(id).orElseThrow(null);
     }
 }
