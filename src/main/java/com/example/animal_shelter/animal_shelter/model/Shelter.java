@@ -45,6 +45,13 @@ public class Shelter {
     @Enumerated(EnumType.STRING)
     private TypesShelters typeShelter;
 
+    @Column(name = "cynologists")
+    private String cynologists;
+
+    @Column(name = "cynologists_advice")
+    private String cynologistsAdvice;
+
+
 
     public Shelter() {
 
@@ -69,6 +76,29 @@ public class Shelter {
         this.typeShelter = typeShelter;
     }
 
+    public Shelter(Long id, String name, String information, String schedule, String address, String safetyRecommendations, TypesShelters typeShelter, String cynologists, String cynologistsAdvice) {
+        this.id = id;
+        this.name = name;
+        this.information = information;
+        this.schedule = schedule;
+        this.address = address;
+        this.safetyRecommendations = safetyRecommendations;
+        this.typeShelter = typeShelter;
+        this.cynologists = cynologists;
+        this.cynologistsAdvice = cynologistsAdvice;
+    }
+
+    public Shelter(String name, String information, String schedule, String address, String safetyRecommendations, TypesShelters typeShelter, String cynologists, String ccynologistsAdvice) {
+        this.name = name;
+        this.information = information;
+        this.schedule = schedule;
+        this.address = address;
+        this.safetyRecommendations = safetyRecommendations;
+        this.typeShelter = typeShelter;
+        this.cynologists = cynologists;
+        this.cynologistsAdvice = cynologistsAdvice;
+    }
+
     @Override
     public String toString() {
         return "Shelter{" +
@@ -78,7 +108,9 @@ public class Shelter {
                 ", schedule='" + schedule + '\'' +
                 ", address='" + address + '\'' +
                 ", safetyRecommendations='" + safetyRecommendations + '\'' +
-                ", typeShelter='" + typeShelter + '\'' +
+                ", typeShelter=" + typeShelter +
+                ", cynologists='" + cynologists + '\'' +
+                ", cynologistsAdvice='" + cynologistsAdvice + '\'' +
                 '}';
     }
 
@@ -139,4 +171,33 @@ public class Shelter {
         this.typeShelter = typeShelter;
     }
 
+
+    public String getCynologists() {
+        return cynologists;
+    }
+
+    public void setCynologists(String cynologists) {
+        this.cynologists = cynologists;
+    }
+
+    public String getCynologistsAdvice() {
+        return cynologistsAdvice;
+    }
+
+    public void setCynologistsAdvice(String cynologistsAdvice) {
+        this.cynologistsAdvice = cynologistsAdvice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shelter shelter = (Shelter) o;
+        return Objects.equals(id, shelter.id) && Objects.equals(name, shelter.name) && Objects.equals(information, shelter.information) && Objects.equals(schedule, shelter.schedule) && Objects.equals(address, shelter.address) && Objects.equals(safetyRecommendations, shelter.safetyRecommendations) && typeShelter == shelter.typeShelter && Objects.equals(cynologists, shelter.cynologists) && Objects.equals(cynologistsAdvice, shelter.cynologistsAdvice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, information, schedule, address, safetyRecommendations, typeShelter, cynologists, cynologistsAdvice);
+    }
 }

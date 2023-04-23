@@ -2,6 +2,7 @@ package com.example.animal_shelter.animal_shelter.listener;
 
 import com.example.animal_shelter.animal_shelter.handler.CallBackQueryHandler;
 import com.example.animal_shelter.animal_shelter.handler.CommandHandler;
+import com.example.animal_shelter.animal_shelter.model.BotUser;
 import com.example.animal_shelter.animal_shelter.model.PersonCat;
 import com.example.animal_shelter.animal_shelter.model.PersonDog;
 import com.example.animal_shelter.animal_shelter.model.Report;
@@ -15,6 +16,7 @@ import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
+import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,35 +181,57 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             String phone = update.message().contact().phoneNumber();
             String username = update.message().chat().username();
             long finalChatId = update.message().chat().id();
-            var sortChatId = personDogRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
-                    .collect(Collectors.toList());
-            var sortChatIdCat = personCatRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
+
+            List<BotUser> sortChatId = botUserRepository.findAll().stream().filter(i -> i.getId() == finalChatId)
                     .collect(Collectors.toList());
 
-
-            if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
-                sendMessage(finalChatId, "Вы уже в базе");
-                return;
-            }
-            if (lastName != null) {
-                String name = firstName + " " + lastName + " " + username;
-                if(isCat){
-                    personCatRepository.save(new PersonCat(name, phone, finalChatId));
-                } else {
-                    personDogRepository.save(new PersonDog(name, phone, finalChatId));
+//            var sortChatId = personDogRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
+//                    .collect(Collectors.toList());
+//            var sortChatIdCat = personCatRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
+//                    .collect(Collectors.toList());
+//
+//
+            if (!sortChatId.isEmpty()){
+                //проверить, что имя заполнено
+                String nameUser = sortChatId.get(0).getName();
+                if(nameUser!= null) {
+                    sendMessage(finalChatId, "Вы уже в базе");
+                    return;
                 }
+            }
+
+            if (lastName != null ) {
+                String name = firstName + " " + lastName + " " + username;
+                BotUser botUser = sortChatId.get(0);
+                botUser.setName(name);
+                botUser.setPhone(phone);
+                botUser = botUserRepository.save(botUser);
                 sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
-                return;
+
+                //Сообщение в чат волонтерам
+                sendMessage(telegramChatVolunteers, phone + " " + firstName + " Добавил(а) свой номер в базу");
+                sendForwardMessage(finalChatId, update.message().messageId());
             }
-            if (isCat) {
-                personCatRepository.save(new PersonCat(firstName, phone, finalChatId));
-            } else {
-                personDogRepository.save(new PersonDog(firstName, phone, finalChatId));
-            }
-            sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
-            // Сообщение в чат волонтерам
-            sendMessage(telegramChatVolunteers, phone + " " + firstName + " Добавил(а) свой номер в базу");
-            sendForwardMessage(finalChatId, update.message().messageId());
+
+//            if (lastName != null) {
+//                String name = firstName + " " + lastName + " " + username;
+//                if(isCat){
+//                    personCatRepository.save(new PersonCat(name, phone, finalChatId));
+//                } else {
+//                    personDogRepository.save(new PersonDog(name, phone, finalChatId));
+//                }
+//                sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
+//                return;
+//            }
+//            if (isCat) {
+//                personCatRepository.save(new PersonCat(firstName, phone, finalChatId));
+//            } else {
+//                personDogRepository.save(new PersonDog(firstName, phone, finalChatId));
+//            }
+           // sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
+             //Сообщение в чат волонтерам
+//            sendMessage(telegramChatVolunteers, phone + " " + firstName + " Добавил(а) свой номер в базу");
+//            sendForwardMessage(finalChatId, update.message().messageId());
         }
     }
 

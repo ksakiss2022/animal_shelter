@@ -225,7 +225,7 @@ public class CommandHandler {
 
         if(typeShelter==TypesShelters.DOG_SHELTER) {
             InlineKeyboardButton button7 = new InlineKeyboardButton("Советы кинолога по первичному общению с собакой");
-            button7.callbackData(BotState.CYNOLOG_ADVIVCE.getTitle());
+            button7.callbackData(BotState.CYNOLOG_ADVICE.getTitle());
 
             InlineKeyboardButton button8 = new InlineKeyboardButton("Рекомендации по проверенным кинологам для дальнейшего обращения к ним");
             button8.callbackData(BotState.CYNOLOGISTS.getTitle());

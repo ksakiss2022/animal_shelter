@@ -42,7 +42,7 @@ public class ShelterController {
             }, tags = "Shelters")
     @PostMapping //POST http://localhost:8080/shelters
     public Shelter createShelter(@Parameter(description = "Необходимо корректно" +
-            " заполнить информацию о приюте", example = "Приют для собак"
+            " заполнить информацию о приюте", example = "Приют для животного"
     ) @RequestBody Shelter shelter) {
         return shelterService.createShelter(shelter);
     }

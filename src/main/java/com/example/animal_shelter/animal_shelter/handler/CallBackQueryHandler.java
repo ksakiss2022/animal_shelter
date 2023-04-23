@@ -114,12 +114,15 @@ public class CallBackQueryHandler {
             case ("PUPPY_KITTEN_HOME_IMPROVEMENT_TIPES"):
             case ("ANIMAL_HOME_IMPROVEMENT_TIPES"):
             case ("ANIMAL_WITH_DISABILITY_HOME_IMPROVEMENT_TIPES"):
-            case ("CYNOLOG_ADVIVCE"):
             case ("REASONS_FOR_REJECTION"):
                 getDocumentsForAnimal(data, chatId);
                 break;
-            case ("accept_record_contact"):
-
+            case "CYNOLOG_ADVICE":
+                sendCynologAdvices(chatId);
+                break;
+            case "CYNOLOGISTS":
+                sendListOfCynologists(chatId);
+                break;
         }
     }
 
@@ -146,6 +149,26 @@ public class CallBackQueryHandler {
         }
         SendMessage sendMessage = new SendMessage(chatId, text);
         telegramBot.execute(sendMessage);
+
+    }
+
+    public void sendCynologAdvices(Object chatId){
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+        TypesShelters typeShelter = botUser.getTypeShelter();
+
+        String cynologistsAdvice = shelterRepository.findSheltersByTypeShelter(typeShelter).getCynologistsAdvice();
+
+        SendMessage message = new SendMessage(chatId, cynologistsAdvice);
+        telegramBot.execute(message);
+    }
+
+    public void sendListOfCynologists(Object chatId){
+        BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
+        TypesShelters typeShelter = botUser.getTypeShelter();
+        String cynologists = shelterRepository.findSheltersByTypeShelter(typeShelter).getCynologists();
+
+        SendMessage message = new SendMessage(chatId, cynologists);
+        telegramBot.execute(message);
 
     }
 }

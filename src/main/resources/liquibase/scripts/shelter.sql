@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS document_cat
 );
 
 
--- changeset skorobeynikova:3
+-- changeset skorobeynikova:14
 
 CREATE SCHEMA IF NOT EXISTS volunteer;
 CREATE TABLE IF NOT EXISTS volunteer
@@ -242,3 +242,13 @@ CREATE TABLE IF NOT EXISTS volunteer
     phone             TEXT NOT NULL,
     contact_info       TEXT NOT NULL
 );
+
+-- changeset salimgareeva:15
+ALTER TABLE shelter
+    ADD COLUMN cynologists TEXT,
+    ADD COLUMN cynologists_advice TEXT;
+
+-- changeset salimgareeva:16
+ALTER TABLE bot_user
+    ADD COLUMN name TEXT,
+    ADD COLUMN phone TEXT;

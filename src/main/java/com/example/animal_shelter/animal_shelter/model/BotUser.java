@@ -38,6 +38,11 @@ public class BotUser {
     @Enumerated(EnumType.STRING)
     private TypesShelters typeShelter;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "phone")
+    private String phone;
 
     public BotUser() {
     }
@@ -91,6 +96,22 @@ public class BotUser {
         this.typeShelter = typeShelter;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
         return "BotUser{" +
@@ -99,6 +120,8 @@ public class BotUser {
                 ", contact='" + contact + '\'' +
                 ", shelterId=" + shelterId +
                 ", typeShelter=" + typeShelter +
+                ", name=" + name +
+                ", phone=" + phone +
                 '}';
     }
 
@@ -107,11 +130,11 @@ public class BotUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BotUser botUser = (BotUser) o;
-        return Objects.equals(id, botUser.id) && Objects.equals(lastRequest, botUser.lastRequest) && Objects.equals(contact, botUser.contact) && Objects.equals(shelterId, botUser.shelterId) && typeShelter == botUser.typeShelter;
+        return Objects.equals(id, botUser.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lastRequest, contact, shelterId, typeShelter);
+        return Objects.hash(id);
     }
 }
