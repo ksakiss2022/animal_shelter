@@ -68,7 +68,7 @@ public class LocationMapService {
      * @param fileName параметр со значением имени файла .
      *  @return возвращает расширение
      */
-        private String getExtensions(String fileName) {
+        public  String getExtensions(String fileName) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
         }
     /**
