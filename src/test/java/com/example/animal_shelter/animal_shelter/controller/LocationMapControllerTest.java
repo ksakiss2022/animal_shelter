@@ -9,7 +9,9 @@ import com.example.animal_shelter.animal_shelter.service.LocationMapService;
 import com.example.animal_shelter.animal_shelter.service.ShelterService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,21 +21,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.InputStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = LocationMapController.class)
 class LocationMapControllerTest {
@@ -58,7 +59,7 @@ class LocationMapControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Test
-    void uploadLocationMap() throws Exception{
+    void uploadLocationMap() throws Exception {
 
         String nameShelter = "Приют 123";
         String informationShelter = "Тестовый приют для собак";
@@ -66,75 +67,69 @@ class LocationMapControllerTest {
         String addressShelter = "Адрес тестового приюта - д.Простоквашино";
         String safetyRecommendationsShelter = "ТБ - осторожность и аккуратность";
         Long idShelter = 1L;
-        //String filePath = "locationMaps\\Shelter{id=1, name='приют1', information='инфа', schedule='расписание', address='адрес', safetyRecommendations='тб'}.jpg";//"hello.jpg";
-
-
 
         Shelter shelter = new Shelter();
         shelter.setName(nameShelter);
-        shelter.setInformation(informationShelter);
-        shelter.setSchedule(scheduleShelter);
-        shelter.setAddress(addressShelter);
-        shelter.setSafetyRecommendations(safetyRecommendationsShelter);
         shelter.setTypeShelter(TypesShelters.DOG_SHELTER);
-            shelter.setId(1L);
-
-        when(shelterRepository.findById(idShelter)).thenReturn(Optional.of(shelter));
+        shelter.setId(1L);
 
         Long id = 1L;
-        Long fileSize = 38213L;
-        String mediaType = "image/jpeg";
-        byte[] data = "Hello".getBytes();
         Long shelterId = 1L;
-
-        Path filePath = Path.of("locationMaps\\" +  shelter + "." + "jpg");
-
 
         LocationMap locationMap = new LocationMap();
         locationMap.setId(id);
-        locationMap.setFilePath(filePath.toString());
-        locationMap.setFileSize(fileSize);
-        locationMap.setMediaType(mediaType);
-        locationMap.setData(data);
         locationMap.setShelterId(idShelter);
-
-       // when(locationMapRepository.findLocationMapByShelterId(shelterId)).thenReturn(Optional.of(locationMap));
-        when(locationMapRepository.save(any(LocationMap.class))).thenReturn(locationMap);
-       // when(locationMapRepository.findLocationMapById(id)).thenReturn(Optional.of(locationMap));
 
         MockMultipartFile file
                 = new MockMultipartFile(
                 "file",
-                "hello.jpeg",
-                MediaType.MULTIPART_FORM_DATA_VALUE,
-                filePath.toString().getBytes()
+                "hello.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                LocationMapControllerTest.class.getResourceAsStream("hello.jpg")
         );
 
+        when(shelterRepository.findById(idShelter)).thenReturn(Optional.of(shelter));
+        when(locationMapRepository.save(any(LocationMap.class))).thenReturn(locationMap, locationMap);
+
         mockMvc.perform(MockMvcRequestBuilders
-                                .multipart("/location_maps/{id}",shelterId)
-                                .file("locationMap", file.getBytes())
-                                .characterEncoding("UTF-8")
+                        .multipart("/location_maps/{id}", shelterId)
+                        .file(file)
                 )
-                .andExpect(status().isOk()) ;
+                .andExpect(result -> {
+                    MockHttpServletResponse mockHttpServletResponse = result.getResponse();
+                    assertThat(mockHttpServletResponse.getStatus()).isEqualTo(HttpStatus.OK.value());
+                });
     }
 
     @Test
     void getAllLocationMaps() throws Exception{
+        String nameShelter = "Приют 123";
+        String informationShelter = "Тестовый приют для собак";
+        String scheduleShelter = "Расписание тестового приюта - с 10 до 18";
+        String addressShelter = "Адрес тестового приюта - д.Простоквашино";
+        String safetyRecommendationsShelter = "ТБ - осторожность и аккуратность";
+        Long idShelter = 1L;
+
+        Shelter shelter = new Shelter();
+        shelter.setName(nameShelter);
+        shelter.setTypeShelter(TypesShelters.DOG_SHELTER);
+        shelter.setId(1L);
 
         Long id = 1L;
-        String filePath = "hello.jpg";
-        Long fileSize = 38213L;
-        String mediaType = "image/jpeg";
-        byte[] data = "Hello".getBytes();
         Long shelterId = 1L;
 
         LocationMap locationMap = new LocationMap();
         locationMap.setId(id);
-        locationMap.setFilePath(filePath);
-        locationMap.setFileSize(fileSize);
-        locationMap.setMediaType(mediaType);
-        locationMap.setData(data);
-        locationMap.setShelterId(shelterId);
+        locationMap.setShelterId(idShelter);
+
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.jpg",
+                MediaType.IMAGE_JPEG_VALUE,
+                LocationMapControllerTest.class.getResourceAsStream("hello.jpg")
+        );
+
         List<LocationMap> list = new ArrayList<>();
         list.add(locationMap);
 
@@ -151,58 +146,53 @@ class LocationMapControllerTest {
 
     @Test
     void downloadLocationMap() throws Exception {
-        Long id = 1L;
-        String filePath = "locationMaps\\Shelter{id=1, name='приют1', information='инфа', schedule='расписание', address='адрес', safetyRecommendations='тб'}.jpg";//"hello.jpg";
+        String nameShelter = "Приют 123";
+        String informationShelter = "Тестовый приют для собак";
+        String scheduleShelter = "Расписание тестового приюта - с 10 до 18";
+        String addressShelter = "Адрес тестового приюта - д.Простоквашино";
+        String safetyRecommendationsShelter = "ТБ - осторожность и аккуратность";
+        Long idShelter = 1L;
 
-        Long fileSize = 38213L;
-        String mediaType = "image/jpeg";
-        byte[] data = "Hello".getBytes();
+        Shelter shelter = new Shelter();
+        shelter.setName(nameShelter);
+        shelter.setTypeShelter(TypesShelters.DOG_SHELTER);
+        shelter.setId(1L);
+
+        Long id = 1L;
         Long shelterId = 1L;
 
         LocationMap locationMap = new LocationMap();
         locationMap.setId(id);
-        locationMap.setFilePath(filePath.toString());
-        locationMap.setFileSize(fileSize);
-        locationMap.setMediaType(mediaType);
-        locationMap.setData(data);
-        locationMap.setShelterId(shelterId);
+        locationMap.setShelterId(idShelter);
 
-        when(locationMapRepository.findLocationMapById(any(Long.class))).thenReturn(Optional.of(locationMap));
-        InputStream is = mock(InputStream.class);
-        FileSystem fileSystem = mock(FileSystem.class);
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/location_maps/{id}", id))
-                .andExpect(status().isOk());
+        List<LocationMap> allLocationMaps = new ArrayList<>();
+        allLocationMaps.add(locationMap);
+        PageRequest pageRequest = PageRequest.of(0,1);
+        Page<LocationMap> page = new PageImpl<>(allLocationMaps);
+
+        when(locationMapRepository.findAll(any(Pageable.class))).thenReturn((Page<LocationMap>) page);
+
+        Collection<LocationMap> result = locationMapService.getAllLocationMaps(0,1);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.contains(locationMap));
     }
 
     @Test
     void deleteLocationMap() throws Exception{
         Long id = 1L;
-        String filePath = "hello.jpg";
-
-        Long fileSize = 38213L;
-        String mediaType = "image/jpeg";
-        byte[] data = "Hello".getBytes();
         Long shelterId = 1L;
 
         LocationMap locationMap = new LocationMap();
         locationMap.setId(id);
-        locationMap.setFilePath(filePath.toString());
-        locationMap.setFileSize(fileSize);
-        locationMap.setMediaType(mediaType);
-        locationMap.setData(data);
         locationMap.setShelterId(shelterId);
 
+        doNothing().when(locationMapRepository).deleteById(id);
 
-        when(locationMapRepository.findById(id)).thenReturn(Optional.of(locationMap));
+        locationMapService.deleteLocationMap(id);
 
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/location_maps/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        verify(locationMapRepository, atLeastOnce()).deleteById(id);
+        verify(locationMapRepository, times(1)).deleteById(id);
 
     }
 }

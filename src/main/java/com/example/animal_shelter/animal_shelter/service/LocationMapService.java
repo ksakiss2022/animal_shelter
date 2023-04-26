@@ -102,4 +102,8 @@ public class LocationMapService {
         logger.debug("Delete LocationMap:{}", id);
         locationMapRepository.deleteById(id);
     }
+
+    public void setLocationMapDir(String locationMapDir) {
+        this.locationMapDir = locationMapDir;
+    }
 }
