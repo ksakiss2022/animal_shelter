@@ -53,7 +53,7 @@ public class LocationMapController {
     }, tags = "Location Maps")
 
     @PostMapping( value ="{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //POST http://localhost:8080/location_maps
-    public ResponseEntity<String> uploadLocationMap(@PathVariable Long id, @RequestParam MultipartFile locationMap) throws IOException {
+    public ResponseEntity<String> uploadLocationMap(@PathVariable Long id, @RequestParam("file") MultipartFile locationMap) throws IOException {
         if(locationMap.getSize()>=1024*300){
             return ResponseEntity.badRequest().body("File is too big");
         }

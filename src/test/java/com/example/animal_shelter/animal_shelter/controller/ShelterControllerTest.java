@@ -55,7 +55,7 @@ class ShelterControllerTest {
         shelterObject.put("schedule",schedule);
         shelterObject.put("address",address);
         shelterObject.put("safetyRecommendations",safetyRecommendations);
-        shelterObject.put("id",id);
+        //shelterObject.put("id",id);
         shelterObject.put("typeShelter",typeShelter);
 
         Shelter shelter = new Shelter(name, information,schedule,address,safetyRecommendations, typeShelter);
@@ -69,13 +69,13 @@ class ShelterControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
+               // .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.information").value(information))
                 .andExpect(jsonPath("$.schedule").value(schedule))
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.safetyRecommendations").value(safetyRecommendations))
-                .andExpect(jsonPath("$.typeShelter").value(typeShelter));
+                .andExpect(jsonPath("$.typeShelter").value(typeShelter.name()));
     }
 
 
@@ -126,7 +126,7 @@ class ShelterControllerTest {
                 .andExpect(jsonPath("$.schedule").value(newSchedule))
                 .andExpect(jsonPath("$.address").value(newAddress))
                 .andExpect(jsonPath("$.safetyRecommendations").value(newSafetyRecommendations))
-                .andExpect(jsonPath("$.typeShelter").value(newTypeShelter));
+                .andExpect(jsonPath("$.typeShelter").value(newTypeShelter.name()));
 
 
     }

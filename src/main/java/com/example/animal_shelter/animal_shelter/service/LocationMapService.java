@@ -68,7 +68,7 @@ public class LocationMapService {
      * @param fileName параметр со значением имени файла .
      *  @return возвращает расширение
      */
-        private String getExtensions(String fileName) {
+        public  String getExtensions(String fileName) {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
         }
     /**
@@ -101,5 +101,9 @@ public class LocationMapService {
     public void deleteLocationMap(long id) {
         logger.debug("Delete LocationMap:{}", id);
         locationMapRepository.deleteById(id);
+    }
+
+    public void setLocationMapDir(String locationMapDir) {
+        this.locationMapDir = locationMapDir;
     }
 }
