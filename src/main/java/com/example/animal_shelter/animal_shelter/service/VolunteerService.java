@@ -1,6 +1,8 @@
 package com.example.animal_shelter.animal_shelter.service;
 
+import com.example.animal_shelter.animal_shelter.model.Cat;
 import com.example.animal_shelter.animal_shelter.model.Volunteer;
+import com.example.animal_shelter.animal_shelter.repository.CatRepository;
 import com.example.animal_shelter.animal_shelter.repository.VolunteerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,35 +22,20 @@ import java.util.Collection;
 @Service
 public class VolunteerService {
 
-    private final Logger logger = LoggerFactory.getLogger(CatService.class);
+    private final Logger logger = LoggerFactory.getLogger(VolunteerService.class);
+    private final VolunteerRepository volunteerRepository;
 
-    private VolunteerRepository volunteerRepository;
-
-
-    /**
-     * В конструкторе VolunteerService() создается пустой список волонтеров.
-     *
-     * @param volunteerRepository
-     */
     public VolunteerService(VolunteerRepository volunteerRepository) {
         this.volunteerRepository = volunteerRepository;
-        volunteers = new ArrayList<>();
-    }
-
-    /**
-     * Список волонтеров хранится в переменной volunteers типа ArrayList<Volunteer>
-     */
-    private ArrayList<Volunteer> volunteers;
-
-    public VolunteerService() {
-
     }
 
 
+
     /**
-     * Метод addVolunteer() добавляет нового волонтера в список.
+     * Метод createCat создает новых <b>кошек</b>, вносимая онформацию о них в базу данных.
      *
-     * @param volunteer параметр со значением данных <b>волонтер</b>
+     * @param volunteer параметр со значением данных <b>кошка</b>.
+     * @return найденная <b>кошка</b>.
      */
     public Volunteer createVolunteer(Volunteer volunteer) {
         logger.debug("Creating a new volunteer:{}", volunteer);
@@ -58,30 +45,66 @@ public class VolunteerService {
     }
 
     /**
-     * Метод getVolunteers() возвращает весь список
-     * волонтеров для использования в других частях приюта или в телеграм-боте.
+     * Метод editCat изменяет уже сущест вующую информацию в базе дынных о <b>кошка</b>.
      *
-     * @return найденный <b>волонтер</b>.
+     * @param volunteer параметр со значением данных <b>кошка</b>.
+     * @return найденная <b>кошка</b>.
      */
+    public Volunteer editVolunteer(Volunteer volunteer) {
+        logger.debug("Edit volunteer:{}", volunteer);
+        if(volunteerRepository.findById(volunteer.getId()).isPresent()) {
+            final var volunteer1 = volunteerRepository.save(volunteer);
+            logger.debug("Volunteer (edit) is{}", volunteer1);
+            return volunteer1;
+        } else {
+            logger.debug("No volunteer found with id {}", volunteer.getId());
+            return null;
+        }
+    }
+    /**
+     * Метод deleteCat удаляет из базы данных ранее внесенную информацию о <b>кошках</b> в базу данных.
+     *
+     * @param id идентификатор искомой <b>кошки</b>, <u>не может быть null</u>.
+     * @return
+     */
+    public Volunteer deleteVolunteer(long id) {
+        logger.debug("Delete volunteer:{}", id);
+        volunteerRepository.deleteById(id);
+        return null;
+    }
 
-    public Collection<Volunteer> getVolunteers() {
-        logger.debug("Collection all volunteer:{}");
+    /**
+     * Метод getAllVolunteers выводит список обо всех <b>кошках</b> внесенных в базу данных.
+     * @return найденные <b>кошки</b>.
+     */
+    public Collection<Volunteer> getAllVolunteers() {
+        logger.debug("Collection all volunteers:{}");
         final var all = volunteerRepository.findAll();
-        logger.debug("All volunteer is{}", all);
+        logger.debug("All volunteers is{}", all);
         return all;
     }
 
-    public Collection<Volunteer> findVolunteerByName(String breed) {
-        logger.debug("Find volunteer by name:{}", breed);
-        final var findVolunteerByNameContainingIgnoreCase = volunteerRepository.findVolunteerByNameContainingIgnoreCase(breed);
-        logger.debug("Volunteer by name is{}", findVolunteerByNameContainingIgnoreCase);
-        return findVolunteerByNameContainingIgnoreCase;
+    /**
+     * Метод findVolunteerBySpatialization ищет кошек по породе.
+     * @paramm spatialization параметр со значением данных <b>порода кошки</b>.
+     * @return найденные <b>породы кошек</b>.
+     */
+    public Collection<Volunteer> findVolunteerBySpatialization(String spatialization) {
+        logger.debug("Find volunteer by spatialization:{}",spatialization);
+        final var findVolunteerBySpatializationContainingIgnoreCase = volunteerRepository.findVolunteerBySpatializationContainingIgnoreCase(spatialization);
+        logger.debug("Volunteer by breed is{}", findVolunteerBySpatializationContainingIgnoreCase);
+        return findVolunteerBySpatializationContainingIgnoreCase;
     }
 
-    public Volunteer findVolunteerByPhone(String phone) {
-        logger.debug("Find Volunteer by phone:{}", phone);
-        final var findVolunteerByPhoneContainingIgnoreCase = volunteerRepository.findVolunteerByPhoneContainingIgnoreCase(phone);
-        logger.debug("Volunteer by phone is{}", findVolunteerByPhoneContainingIgnoreCase);
-        return findVolunteerByPhoneContainingIgnoreCase;
+    /**
+     * Метод findCatByNameCat ищет кошек по кличке кошки.
+     * @param name параметр со значением данных <b>кличка кошки</b>.
+     * @return найденные <b>кошки по кличке</b>.
+     */
+    public Volunteer findVolunteerByName(String name) {
+        logger.debug("Find Volunteer by name:{}",name);
+        final var findVolunteerByNameContainingIgnoreCase = volunteerRepository.findVolunteerByNameContainingIgnoreCase(name);
+        logger.debug("Volunteer by name is{}", findVolunteerByNameContainingIgnoreCase);
+        return findVolunteerByNameContainingIgnoreCase;
     }
 }

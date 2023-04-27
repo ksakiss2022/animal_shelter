@@ -3,11 +3,12 @@ package com.example.animal_shelter.animal_shelter.listener;
 import com.example.animal_shelter.animal_shelter.handler.CallBackQueryHandler;
 import com.example.animal_shelter.animal_shelter.handler.CommandHandler;
 import com.example.animal_shelter.animal_shelter.model.BotUser;
-import com.example.animal_shelter.animal_shelter.model.PersonCat;
-import com.example.animal_shelter.animal_shelter.model.PersonDog;
 import com.example.animal_shelter.animal_shelter.model.Report;
 import com.example.animal_shelter.animal_shelter.repository.*;
+import com.example.animal_shelter.animal_shelter.service.BotUserService;
+import com.example.animal_shelter.animal_shelter.service.LocationMapService;
 import com.example.animal_shelter.animal_shelter.service.ReportService;
+import com.example.animal_shelter.animal_shelter.service.ShelterService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.File;
@@ -16,7 +17,6 @@ import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
-import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final CommandHandler commandHandler;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, CallBackQueryHandler callBackQueryHandler, CommandHandler commandHandler) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, ReportService reportService, ShelterService shelterService, BotUserService botUserService, LocationMapService locationMapService, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, CallBackQueryHandler callBackQueryHandler, CommandHandler commandHandler) {
         this.telegramBot = telegramBot;
         this.shelterRepository = shelterRepository;
         this.locationMapRepository = locationMapRepository;

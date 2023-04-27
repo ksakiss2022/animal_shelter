@@ -1,6 +1,5 @@
 package com.example.animal_shelter.animal_shelter.service;
 
-import com.example.animal_shelter.animal_shelter.model.Cat;
 import com.example.animal_shelter.animal_shelter.model.PersonCat;
 import com.example.animal_shelter.animal_shelter.repository.PersonCatRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,16 +40,6 @@ class PersonCatServiceTest {
         //  expectedPersonCat.setChatId("Не любит детей.");
     }
 
-    //    public PersonCat(Long id, String name, int yearOfBirth, String phone, String mail, String address, Long chatId) {
-    //        this.id = id;
-    //        this.name = name;
-    //        this.yearOfBirth = yearOfBirth;
-    //        this.phone = phone;
-    //        this.mail = mail;
-    //        this.address = address;
-    //        this.chatId = chatId;
-    //
-    //    }
     @Test
     void createPersonCat() {
         when(personCatRepository.save(any())).thenReturn(personCat1);
@@ -117,85 +106,103 @@ class PersonCatServiceTest {
 //    @Test
 //    void testGetAllParsonsCats() {}
 
-//    @Test
-//    void testEditPersonCat() {
-//
-//        PersonCatRepository personCatRepo = mock(PersonCatRepository.class);
-//        PersonCat personCat = new PersonCat("Fluffy", "5", 1L);
-//        when(personCatRepo.findById(personCat.getId())).thenReturn(Optional.of(personCat));
-//        when(personCatRepo.save(personCat)).thenReturn(personCat);
-//        PersonCatService personCatService = new PersonCatService(personCatRepo);
-//
-//
-//        PersonCat editedPersonCat = personCatService.editPersonCat(personCat);
-//
-//
-//        verify(personCatRepo, times(1)).findById(personCat.getId());
-//        verify(personCatRepo, times(1)).save(personCat);
-//        assertNotNull(editedPersonCat);
-//        assertEquals("Борис Егорович", editedPersonCat.getName());
-//        assertEquals("5", editedPersonCat.getPhone());
-//        assertEquals(1l, editedPersonCat.getChatId());
-//    }
-//    @Test
-//    public void returnEmptyListWhenNoPersonCatsFoundTest() {
-//        String name = "Игорь";
-//
-//        List<Cat> foundPersonCats = new ArrayList<>();
-//
-//        when(personCatRepository.findPersonCatByNameContainsIgnoreCase(name)).thenReturn(foundPersonCats);
-//
-//        Collection<PersonCat> result = personCatService.findPersonsCatByNamePersons(name);
-//
-//        assertNotNull(result);
-//        assertEquals(0, result.size());
-//    }
-//    @Test
-//    void findPersonsCatByNamePersons() {
-//        // Создаем тестовые данные
-//        String name = "Олег";
-//        PersonCat expectedPersonCat = new PersonCat();
-//
-//        // Задаем поведение репозитория
-//        when(personCatRepository.findPersonCatByNameContainsIgnoreCase(name)).thenReturn((Collection<PersonCat>) expectedPersonCat);
-//
-//        // Вызываем метод сервиса с тестовыми данными
-//        PersonCat actualPersonCat = (PersonCat) personCatService.findPersonsCatByNamePersons(name);
-//
-//        // Проверяем, что результат работы метода соответствует ожиданиям
-//        assertEquals(expectedPersonCat, actualPersonCat);
-//    }
+    @Test
+    void testEditPersonCat() {
 
-//    @Test
-//    void findPersonCatsByMail() {
-//        String mail = "aaa@mail.ru";
-//
-//        PersonCat personCat1 = new PersonCat();
-//        personCat1.setId(1L);
-//        personCat1.setName("Василий Вячеславович Егоров");
-//        personCat1.setYearOfBirth(1980);
-//        personCat1.setPhone("8-999-222-33-33");
-//        personCat1.setMail("egorov@mail.ru");
-//        personCat1.setAddress("г.Москва, улица Академия Павлова, дом 3, кв. 5");
-//
-//
-//        PersonCat personCat2 = new PersonCat();
-//        personCat2.setId(2L);
-//        personCat2.setName("Ольга Васильевна Иванова");
-//        personCat2.setYearOfBirth(1982);
-//        personCat2.setPhone("8-555-222-33-33");
-//        personCat2.setMail("olga@mail.ru");
-//        personCat2.setAddress("г.Москва, улица Ради, дом 3, кв. 55");
-//
-//        List<PersonCat> foundPersonCats = List.of(personCat1, personCat2);
-//
-//        when(personCatRepository.findPersonCatByMailContainsIgnoreCase(mail)).thenReturn((PersonCat) foundPersonCats);
-//
-//        List<PersonCat> result = (List<PersonCat>) personCatRepository.findPersonCatByMailContainsIgnoreCase(mail);
-//
-//        assertNotNull(result);
-//        assertEquals(2, result.size());
-//        assertTrue(result.contains(personCat1));
-//        assertTrue(result.contains(personCat2));
-//    }
+        PersonCatRepository personCatRepository1 = mock(PersonCatRepository.class);
+        PersonCat personCat = new PersonCat("Борис Иванович", "5", 1L);
+        when(personCatRepository1.findById(personCat.getId())).thenReturn(Optional.of(personCat));
+        when(personCatRepository1.save(personCat)).thenReturn(personCat);
+        PersonCatService personCatService = new PersonCatService(personCatRepository1);
+
+
+        PersonCat editedPersonCat = personCatService.editPersonCat(personCat);
+
+
+        verify(personCatRepository1, times(1)).findById(personCat.getId());
+        verify(personCatRepository1, times(1)).save(personCat);
+        assertNotNull(editedPersonCat);
+        assertEquals("Борис Иванович", editedPersonCat.getName());
+        assertEquals("5", editedPersonCat.getPhone());
+        assertEquals(1l, editedPersonCat.getChatId());
+    }
+    @Test
+    public void returnEmptyListWhenNoPersonCatsFoundTest() {
+        String name = "Игорь";
+
+        List<PersonCat> foundPersonCats = new ArrayList<>();
+
+        when(personCatRepository.findPersonCatByNameContainsIgnoreCase(name)).thenReturn(foundPersonCats);
+
+        Collection<PersonCat> result = personCatService.findPersonsCatByNamePersons(name);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void findPersonsCatByNamePersons() {
+        // Создаем тестовые данные
+        String name = "Олег";
+        PersonCat expectedPersonCat = new PersonCat();
+        List<PersonCat> expectedPersonCatList = new ArrayList<>();
+        expectedPersonCatList.add(expectedPersonCat);
+
+        // Задаем поведение репозитория
+        when(personCatRepository.findPersonCatByNameContainsIgnoreCase(name)).thenReturn(expectedPersonCatList);
+
+        // Вызываем метод сервиса с тестовыми данными
+        Collection<PersonCat> actualPersonCatList = personCatService.findPersonsCatByNamePersons(name);
+
+        // Проверяем, что результат работы метода соответствует ожиданиям
+        assertEquals(expectedPersonCatList, actualPersonCatList);
+    }
+
+
+@Test
+public void findPersonCatByNameCatTest() {
+    // Создаем тестовые данные
+    String mail = "Дина";
+    PersonCat expectedPersonCat = new PersonCat();
+
+    // Задаем поведение репозитория
+    when(personCatRepository.findPersonCatByMailContainsIgnoreCase(mail)).thenReturn(expectedPersonCat);
+
+    // Вызываем метод сервиса с тестовыми данными
+    PersonCat actualPersonCat = personCatService.findPersonsCatByMail(mail);
+
+    // Проверяем, что результат работы метода соответствует ожиданиям
+    assertEquals(expectedPersonCat, actualPersonCat);
+}
+    @Test
+    void getAllPersonsCats() {
+        PersonCat personCat1 = new PersonCat();
+        personCat1.setId(1L);
+        personCat1.setName("Маргарита");
+        personCat1.setYearOfBirth(1987);
+        personCat1.setPhone("8-999-999-00-00");
+        personCat1.setMail("margo@gmail.ru");
+        personCat1.setAddress("Москва");
+
+        PersonCat personCat2 = new PersonCat();
+        personCat2.setId(2L);
+        personCat2.setName("Николай");
+        personCat2.setYearOfBirth(1980);
+        personCat2.setPhone("8-333-999-00-00");
+        personCat2.setMail("nikolaq@gmail.ru");
+        personCat2.setAddress("Санкт-Петербург");
+
+        List<PersonCat> personCats = new ArrayList<>();
+        personCats.add(personCat1);
+        personCats.add(personCat2);
+
+        when(personCatRepository.findAll()).thenReturn(personCats);
+
+        Collection<PersonCat> result = personCatService.getAllParsonsCats();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.contains(personCat1));
+        assertTrue(result.contains(personCat2));
+    }
 }

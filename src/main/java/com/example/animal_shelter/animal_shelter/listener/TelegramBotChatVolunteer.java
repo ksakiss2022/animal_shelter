@@ -75,20 +75,20 @@ public class TelegramBotChatVolunteer implements UpdatesListener {
             long chatId = update.message().chat().id();
 
             if ("/volunteers".equals(messageText)) {
-                List<Volunteer> volunteers = (List<Volunteer>) volunteerService.getVolunteers();
+                List<Volunteer> volunteers = (List<Volunteer>) volunteerService.getAllVolunteers();
                 StringBuilder stringBuilder = new StringBuilder();
 
                 if (volunteers.isEmpty()) {
                     stringBuilder.append("Нет волонтеров в приюте");
                 } else {
                     for (Volunteer volunteer : volunteers) {
-                        stringBuilder.append(volunteer.getName()).append(" - ").append(volunteer.getContactInfo()).append("\n");
+                        stringBuilder.append(volunteer.getName()).append(" - ").append(volunteer.getWorkExperience()).append("\n");
                     }
                 }
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "*****"));
                 System.out.println("**********: " + update.message().chat().id());
             } else if ("/chat".equals(messageText)) {
-                List<Volunteer> volunteers = (List<Volunteer>) volunteerService.getVolunteers();
+                List<Volunteer> volunteers = (List<Volunteer>) volunteerService.getAllVolunteers();
                 Volunteer volunteer = null;
                 if (!volunteers.isEmpty()) {
                     volunteer = volunteers.get(0);

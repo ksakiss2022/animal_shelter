@@ -8,7 +8,7 @@ import java.util.Collection;
 
 @Repository
 public interface VolunteerRepository extends JpaRepository<Volunteer, Long> {
-    Collection<Volunteer> findVolunteerByNameContainingIgnoreCase(String name);
+    Collection<Volunteer> findVolunteerBySpatializationContainingIgnoreCase (String name);
 
-    Volunteer findVolunteerByPhoneContainingIgnoreCase(String phone);
+    Volunteer findVolunteerByNameContainingIgnoreCase(String spatialization);
 }
