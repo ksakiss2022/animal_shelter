@@ -32,10 +32,10 @@ public class VolunteerService {
 
 
     /**
-     * Метод createCat создает новых <b>кошек</b>, вносимая онформацию о них в базу данных.
+     * Метод createVolunteer создает новых <b>волонтеров</b>, вносимая онформацию о них в базу данных.
      *
-     * @param volunteer параметр со значением данных <b>кошка</b>.
-     * @return найденная <b>кошка</b>.
+     * @param volunteer параметр со значением данных <b>волонтер</b>.
+     * @return найденная <b>волонтер</b>.
      */
     public Volunteer createVolunteer(Volunteer volunteer) {
         logger.debug("Creating a new volunteer:{}", volunteer);
@@ -45,10 +45,10 @@ public class VolunteerService {
     }
 
     /**
-     * Метод editCat изменяет уже сущест вующую информацию в базе дынных о <b>кошка</b>.
+     * Метод editVolunteer изменяет уже сущест вующую информацию в базе дынных о <b>волонтерах</b>.
      *
-     * @param volunteer параметр со значением данных <b>кошка</b>.
-     * @return найденная <b>кошка</b>.
+     * @param volunteer параметр со значением данных <b>волонтер</b>.
+     * @return найденная <b>волонтер</b>.
      */
     public Volunteer editVolunteer(Volunteer volunteer) {
         logger.debug("Edit volunteer:{}", volunteer);
@@ -62,9 +62,9 @@ public class VolunteerService {
         }
     }
     /**
-     * Метод deleteCat удаляет из базы данных ранее внесенную информацию о <b>кошках</b> в базу данных.
+     * Метод deleteVolunteer удаляет из базы данных ранее внесенную информацию о <b>волонтерах</b> в базу данных.
      *
-     * @param id идентификатор искомой <b>кошки</b>, <u>не может быть null</u>.
+     * @param id идентификатор искомого <b>волонтера</b>, <u>не может быть null</u>.
      * @return
      */
     public Volunteer deleteVolunteer(long id) {
@@ -74,8 +74,8 @@ public class VolunteerService {
     }
 
     /**
-     * Метод getAllVolunteers выводит список обо всех <b>кошках</b> внесенных в базу данных.
-     * @return найденные <b>кошки</b>.
+     * Метод getAllVolunteers выводит список обо всех <b>волнтерах</b> внесенных в базу данных.
+     * @return найденные <b>волонтеры</b>.
      */
     public Collection<Volunteer> getAllVolunteers() {
         logger.debug("Collection all volunteers:{}");
@@ -85,9 +85,9 @@ public class VolunteerService {
     }
 
     /**
-     * Метод findVolunteerBySpatialization ищет кошек по породе.
-     * @paramm spatialization параметр со значением данных <b>порода кошки</b>.
-     * @return найденные <b>породы кошек</b>.
+     * Метод findVolunteerBySpatialization ищет волонтеров по породе.
+     * @paramm spatialization параметр со значением данных <b>специализация</b>.
+     * @return найденные <b>нужная специализация</b>.
      */
     public Collection<Volunteer> findVolunteerBySpatialization(String spatialization) {
         logger.debug("Find volunteer by spatialization:{}",spatialization);
@@ -97,9 +97,9 @@ public class VolunteerService {
     }
 
     /**
-     * Метод findCatByNameCat ищет кошек по кличке кошки.
-     * @param name параметр со значением данных <b>кличка кошки</b>.
-     * @return найденные <b>кошки по кличке</b>.
+     * Метод findVolunteerByName ищет волонтеров по имени.
+     * @param name параметр со значением данных <b>имя</b>.
+     * @return найденные <b>волонтеры по имени</b>.
      */
     public Volunteer findVolunteerByName(String name) {
         logger.debug("Find Volunteer by name:{}",name);

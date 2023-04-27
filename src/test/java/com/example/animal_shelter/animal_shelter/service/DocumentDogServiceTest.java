@@ -49,7 +49,15 @@ class DocumentDogServiceTest {
         assertEquals(text, created.getText());
 
     }
+    @Test
+    void createDocumentDogNull() {
+        DocumentDog documentDog = null;
+        when(documentDogRepository.save(documentDog)).thenReturn(null);
 
+        DocumentDog result = documentDogService.createDocumentDog(documentDog);
+
+        assertNull(result);
+    }
     @Test
     void editDocumentDog() throws Exception{
         final TypesDocuments typeDocumentDog = TypesDocuments.DOCUMENTS_TO_ADOPT_ANIMAL;

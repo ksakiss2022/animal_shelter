@@ -38,6 +38,15 @@ class DocumentCatServiceTest {
         assertEquals(typeDocument, created.getTypeDocumentCat());
         assertEquals(text, created.getText());
     }
+    @Test
+    void createDocumentCatNull() {
+        DocumentCat documentCat = null;
+        when(documentCatRepository.save(documentCat)).thenReturn(null);
+
+        DocumentCat result = documentCatService.createDocumentCat(documentCat);
+
+        assertNull(result);
+    }
 
     @Test
     void editDocumentCat() throws Exception{
