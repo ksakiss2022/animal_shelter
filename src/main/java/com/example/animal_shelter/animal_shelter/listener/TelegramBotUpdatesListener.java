@@ -58,11 +58,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final DocumentDogRepository documentDogRepository;
     private final CallBackQueryHandler callBackQueryHandler;
 
-    @Autowired
-    private BotUserRepository botUserRepository;
 
-    @Autowired
-    private ReportRepository reportRepository;
+    private final  BotUserRepository botUserRepository;
+
+
+    private final  ReportRepository reportRepository;
     @Autowired
     private PersonDogRepository personDogRepository;
     @Autowired
@@ -72,13 +72,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final CommandHandler commandHandler;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, CallBackQueryHandler callBackQueryHandler, CommandHandler commandHandler) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, ShelterRepository shelterRepository, LocationMapRepository locationMapRepository, DocumentDogRepository documentDogRepository, CallBackQueryHandler callBackQueryHandler, CommandHandler commandHandler,
+                                      BotUserRepository botUserRepository, ReportRepository reportRepository) {
         this.telegramBot = telegramBot;
         this.shelterRepository = shelterRepository;
         this.locationMapRepository = locationMapRepository;
         this.documentDogRepository = documentDogRepository;
         this.callBackQueryHandler = callBackQueryHandler;
         this.commandHandler = commandHandler;
+        this.botUserRepository = botUserRepository;
+        this.reportRepository = reportRepository;
     }
 
 
