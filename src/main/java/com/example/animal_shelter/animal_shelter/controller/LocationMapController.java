@@ -92,7 +92,7 @@ public class LocationMapController {
             )
     }, tags = "Location Maps")
     @GetMapping("{id}") //GET http://localhost:8080/location_maps/3
-    public void downloadLocationMap(@PathVariable Long id, HttpServletResponse response) throws IOException{
+    public void downloadLocationMap(@PathVariable Long id,  HttpServletResponse response) throws IOException{
         LocationMap locationMap = locationMapService.findLocationMap(id);
         Path path = Path.of(locationMap.getFilePath());
         try(InputStream is = Files.newInputStream(path);

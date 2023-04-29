@@ -129,7 +129,7 @@ public class CallBackQueryHandler {
         }
     }
 
-    public Shelter getShelterByChatId(Long chatId){
+    private Shelter getShelterByChatId(Long chatId){
         BotUser botUser = botUserRepository.findBotUserById(Long.valueOf(chatId.toString()));
        TypesShelters typesShelters = botUser.getTypeShelter();
        return shelterRepository.findSheltersByTypeShelter(typesShelters);

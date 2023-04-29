@@ -90,7 +90,7 @@ class LocationMapServiceTest {
         locationMap2.setId(id);
         locationMap2.setShelterId(idShelter);
 
-        when(locationMapRepository.findLocationMapById(id)).thenReturn(Optional.of(locationMap));
+        when(locationMapRepository.findById(id)).thenReturn(Optional.of(locationMap));
 
         LocationMap created = locationMapService.findLocationMap(id);
 

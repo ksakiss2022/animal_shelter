@@ -70,7 +70,7 @@ class CommandHandlerTest {
 
     @ParameterizedTest
     @MethodSource("provideParamsForHandle")
-    void handle(String text, User user) throws URISyntaxException, IOException {
+    void handleForMainMenu(String text, User user) throws URISyntaxException, IOException {
         when(telegramBot.execute(any())).thenReturn(generateResponseOk());
         String json = Files.readString(
                 Paths.get(CommandHandlerTest.class.getResource("/text_update.json").toURI()));
@@ -86,6 +86,43 @@ class CommandHandlerTest {
         Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo(123L);
     }
 
+    @Test
+    void handleForInfoAboutBox( ) throws URISyntaxException, IOException {
+        String text = "Информация о возможностях бота";
+        User user = new User(123L);
+        when(telegramBot.execute(any())).thenReturn(generateResponseOk());
+        String json = Files.readString(
+                Paths.get(CommandHandlerTest.class.getResource("/text_update.json").toURI()));
+        Update update = getUpdate(json, text);
+        BotUser botUser = new BotUser(123L);
+        botUser.setTypeShelter(TypesShelters.DOG_SHELTER);
+        //when(botUserRepository.findBotUserById(any())).thenReturn(botUser);
+        commandHandler.handle(text,user);
+        //Then
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+        Mockito.verify(telegramBot).execute(argumentCaptor.capture());
+        SendMessage actual = argumentCaptor.getValue();
+        Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo(123L);
+    }
+
+    @Test
+    void handleForStart( ) throws URISyntaxException, IOException {
+        String text = "/start";
+        User user = new User(123L);
+        when(telegramBot.execute(any())).thenReturn(generateResponseOk());
+        String json = Files.readString(
+                Paths.get(CommandHandlerTest.class.getResource("/text_update.json").toURI()));
+        Update update = getUpdate(json, text);
+        BotUser botUser = new BotUser(123L);
+        botUser.setTypeShelter(TypesShelters.DOG_SHELTER);
+        //when(botUserRepository.findBotUserById(any())).thenReturn(botUser);
+        commandHandler.handle(text,user);
+        //Then
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+        Mockito.verify(telegramBot, times(2)).execute(argumentCaptor.capture());
+        SendMessage actual = argumentCaptor.getValue();
+        Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo(123L);
+    }
 
 
     @Test
@@ -103,6 +140,44 @@ class CommandHandlerTest {
         Mockito.verify(telegramBot).execute(argumentCaptor.capture());
         SendMessage actual = argumentCaptor.getValue();
         Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo(123L);
+    }
+
+    @Test
+    void handleForInfoShelter( ) throws URISyntaxException, IOException {
+        String text = "Узнать информацию о приюте";
+        User user = new User(123L);
+        when(telegramBot.execute(any())).thenReturn(generateResponseOk());
+        String json = Files.readString(
+                Paths.get(CommandHandlerTest.class.getResource("/text_update.json").toURI()));
+        Update update = getUpdate(json, text);
+        BotUser botUser = new BotUser(123L);
+        botUser.setTypeShelter(TypesShelters.DOG_SHELTER);
+        //when(botUserRepository.findBotUserById(any())).thenReturn(botUser);
+        commandHandler.handle(text,user);
+        //Then
+        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+        Mockito.verify(telegramBot).execute(argumentCaptor.capture());
+        SendMessage actual = argumentCaptor.getValue();
+        Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo("123");
+    }
+
+    @Test
+    void handleForAdoptFromShelter( ) throws URISyntaxException, IOException {
+        String text = "Как взять питомца из приюта";;
+        User user = new User(123L);
+        when(telegramBot.execute(any())).thenReturn(generateResponseOk());
+        String json = Files.readString(
+                Paths.get(CommandHandlerTest.class.getResource("/text_update.json").toURI()));
+        Update update = getUpdate(json, text);
+        BotUser botUser = new BotUser(123L);
+        botUser.setTypeShelter(TypesShelters.DOG_SHELTER);
+        when(botUserRepository.findBotUserById(any())).thenReturn(botUser);
+        commandHandler.handle(text,user);
+        //Then
+//        ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
+//        Mockito.verify(telegramBot).execute(argumentCaptor.capture());
+//        SendMessage actual = argumentCaptor.getValue();
+//        Assertions.assertThat(actual.getParameters().get("chat_id")).isEqualTo("123");
     }
 
     @Test
@@ -131,31 +206,22 @@ public void testSendMessage() throws TelegramException {
     long chatId = 123456;
     String messageText = "Тест!";
 
-    TelegramBot mockedTelegramBot = mock(TelegramBot.class);
-    TelegramBotUpdatesListener telegramBotUpdatesListener = new TelegramBotUpdatesListener(mockedTelegramBot,
-            mock(ShelterRepository.class),
-            mock(LocationMapRepository.class),
-            mock(DocumentDogRepository.class),
-            mock(CallBackQueryHandler.class),
-            mock(CommandHandler.class),
-            mock(BotUserRepository.class),
-            mock(ReportRepository.class));
-
-    telegramBotUpdatesListener.sendMessage(chatId, messageText);
+    commandHandler.sendMessage(chatId, messageText);
 
     SendMessage expectedMessage = new SendMessage(chatId, messageText);
     ArgumentCaptor<SendMessage> argumentCaptor = ArgumentCaptor.forClass(SendMessage.class);
 
-    verify(mockedTelegramBot, times(1)).execute(argumentCaptor.capture());
+    verify(telegramBot, times(1)).execute(argumentCaptor.capture());
     SendMessage actualMessage = argumentCaptor.getValue();
 
     expectedMessage = new SendMessage(chatId, messageText);
-
 }
+
     private SendResponse generateResponseOk() {
         return BotUtils.fromJson("""
                 { "ok": true }""", SendResponse.class);
     }
+
     private Update getUpdate(String json, String replaced) {
         return BotUtils.fromJson(json.replace("%command%", replaced), Update.class);
     }
@@ -164,7 +230,7 @@ public void testSendMessage() throws TelegramException {
         User user = new User(123L);
         return java.util.stream.Stream.of(
                 //  Arguments.of(BotState.DOCUMENTS_TO_ADOPT_ANIMAL.getTitle()
-                Arguments.of("Главное меню",user)
+                Arguments.of("Главное меню", user)
         );
     }
 }

@@ -24,7 +24,7 @@ public class LocationMapService {
     private String locationMapDir;
 
         private ShelterService shelterService;
-        private LocationMapRepository locationMapRepository;
+        private final LocationMapRepository locationMapRepository;
 
         private final Logger logger = LoggerFactory.getLogger(LocationMapService.class);
 
@@ -78,7 +78,7 @@ public class LocationMapService {
      */
         public LocationMap findLocationMap(long id) {
             logger.debug("Requesting fnd location map by id");
-            return locationMapRepository.findLocationMapById(id).orElse(new LocationMap());
+            return locationMapRepository.findById(id).orElse(new LocationMap());
         }
 
     /**
