@@ -3,8 +3,6 @@ package com.example.animal_shelter.animal_shelter.listener;
 import com.example.animal_shelter.animal_shelter.handler.CallBackQueryHandler;
 import com.example.animal_shelter.animal_shelter.handler.CommandHandler;
 import com.example.animal_shelter.animal_shelter.model.BotUser;
-import com.example.animal_shelter.animal_shelter.model.PersonCat;
-import com.example.animal_shelter.animal_shelter.model.PersonDog;
 import com.example.animal_shelter.animal_shelter.model.Report;
 import com.example.animal_shelter.animal_shelter.repository.*;
 import com.example.animal_shelter.animal_shelter.service.ReportService;
@@ -16,7 +14,6 @@ import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
-import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +97,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
      */
     public int process(List<Update> updates) {
 
+
         Long ShelterId;
         try {
             updates.forEach(update -> {
@@ -116,43 +114,43 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         .filter(s -> s.getChatId() == chatIdPerson)
                         .count() + 1;
 
-                    long compareTime = LocalDate.now().getDayOfMonth();
+                long compareTime = LocalDate.now().getDayOfMonth();
 
-                    Long lastMessageTime = reportRepository.findAll().stream()
-                            .filter(s -> s.getChatId() == chatIdPerson)
-                            .map(Report::getLastMessageMs).max(Long::compare).orElseGet(() -> null);
-                    if (lastMessageTime != null) {
-                        Date lastDateSendMessage = new Date(lastMessageTime * 1000);
-                        long numberOfDay = lastDateSendMessage.getDate();
+                Long lastMessageTime = reportRepository.findAll().stream()
+                        .filter(s -> s.getChatId() == chatIdPerson)
+                        .map(Report::getLastMessageMs).max(Long::compare).orElseGet(() -> null);
+                if (lastMessageTime != null) {
+                    Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                    long numberOfDay = lastDateSendMessage.getDate();
 
-                        if (daysOfReports < 30) {
-                            if (compareTime != numberOfDay) {
-                                //Обработка отчета ( Фото и текст)
-                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                                    getReport(update);
-                                }
-                            } else {
-                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                                    sendMessage(chatIdPerson, "Вы уже отправляли отчет сегодня");
-                                }
+                    if (daysOfReports < 30) {
+                        if (compareTime != numberOfDay) {
+                            //Обработка отчета ( Фото и текст)
+                            if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                getReport(update);
                             }
-                            if (daysOfReports == 31) {
-                                sendMessage(chatIdPerson, "Вы прошли испытательный срок!");
+                        } else {
+                            if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                sendMessage(chatIdPerson, "Вы уже отправляли отчет сегодня");
                             }
                         }
-                    } else {
-                        if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                            getReport(update);
+                        if (daysOfReports == 31) {
+                            sendMessage(chatIdPerson, "Вы прошли испытательный срок!");
                         }
                     }
-                    if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
-                        sendMessage(chatIdPerson, "Отчет нужно присылать с описанием!");
+                } else {
+                    if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                        getReport(update);
                     }
+                }
+                if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
+                    sendMessage(chatIdPerson, "Отчет нужно присылать с описанием!");
+                }
 
-                    // Добавление имени и телефона в базу через кнопку оставить контакты
-                    if (update.message() != null && update.message().contact() != null) {
-                        shareContact(update);
-                    }
+                // Добавление имени и телефона в базу через кнопку оставить контакты
+                if (update.message() != null && update.message().contact() != null) {
+                    shareContact(update);
+                }
 
 
 
@@ -161,7 +159,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 }
                 //else {
 
-                   // }
+                // }
                 //}
             });
         } catch (Exception e) {
@@ -181,6 +179,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.execute(forwardMessage);
     }
 
+
     public void shareContact(Update update) {
         if (update.message().contact() != null) {
             String firstName = update.message().contact().firstName();
@@ -192,12 +191,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             List<BotUser> sortChatId = botUserRepository.findAll().stream().filter(i -> i.getId() == finalChatId)
                     .collect(Collectors.toList());
 
-//            var sortChatId = personDogRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
-//                    .collect(Collectors.toList());
-//            var sortChatIdCat = personCatRepository.findAll().stream().filter(i -> i.getChatId() == finalChatId)
-//                    .collect(Collectors.toList());
-//
-//
             if (!sortChatId.isEmpty()){
                 //проверить, что имя заполнено
                 String nameUser = sortChatId.get(0).getName();
@@ -235,8 +228,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 //            } else {
 //                personDogRepository.save(new PersonDog(firstName, phone, finalChatId));
 //            }
-           // sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
-             //Сообщение в чат волонтерам
+            // sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
+            //Сообщение в чат волонтерам
 //            sendMessage(telegramChatVolunteers, phone + " " + firstName + " Добавил(а) свой номер в базу");
 //            sendForwardMessage(finalChatId, update.message().messageId());
         }
@@ -262,6 +255,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 byte[] fileContent = telegramBot.getFileContent(file);
                 reportService.uploadReport(update.message().chat().id(), fileContent, file,
                         ration, health, habits, fullPathPhoto, dateSendMessage, timeDate, daysOfReports);
+
 
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят"));
 
