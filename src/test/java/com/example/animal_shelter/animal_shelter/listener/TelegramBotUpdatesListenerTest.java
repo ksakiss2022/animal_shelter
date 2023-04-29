@@ -1,4 +1,5 @@
 package com.example.animal_shelter.animal_shelter.listener;
+
 import com.pengrad.telegrambot.response.GetFileResponse;
 import com.example.animal_shelter.animal_shelter.handler.CallBackQueryHandler;
 import com.example.animal_shelter.animal_shelter.handler.CommandHandler;
@@ -17,6 +18,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,7 @@ import org.mockito.stubbing.Answer;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -58,23 +61,10 @@ class TelegramBotUpdatesListenerTest {
     private ReportService reportService;
 
     private static final int DAYS_OF_REPORTS = 7;
-    //    @Mock
-//    private PersonDogRepository personDogRepository;
-//    @Mock
-//    private PersonCatRepository personCatRepository;
-//    @Mock
-//    private ReportService reportService;
+
     @InjectMocks
     private TelegramBotUpdatesListener telegramBotUpdatesListener;
 
-    //    @BeforeEach
-//    public void setUp() {
-//        telegramBotUpdatesListener = new TelegramBotUpdatesListener(telegramBot,
-//                shelterRepository,
-//                locationMapRepository, documentDogRepository, callBackQueryHandler,
-//                commandHandler, botUserRepository, reportRepository);
-//        // when(telegramBot.execute(any())).thenReturn(generateResponseOk());
-//    }
     @BeforeEach
     public void setUp() {
         reportService = mock(ReportService.class); // initialize the reportService mock
@@ -150,9 +140,7 @@ class TelegramBotUpdatesListenerTest {
         ArgumentCaptor<ForwardMessage> argumentCaptor = ArgumentCaptor.forClass(ForwardMessage.class);
         verify(mockedTelegramBot, times(1)).execute(argumentCaptor.capture());
         ForwardMessage actualMessage = argumentCaptor.getValue();
-        // assertEquals(expectedForwardMessage.chatId(), actualMessage.chatId());
-        //assertEquals(expectedForwardMessage.fromChatId(), actualMessage.fromChatId());
-        //assertEquals(expectedForwardMessage.messageId(), actualMessage.messageId());
+
     }
 
     @Test
@@ -207,54 +195,58 @@ class TelegramBotUpdatesListenerTest {
                 { "ok": true }""", SendResponse.class);
     }
 
-//    @Test
-//    public void testGetReport() throws IOException {
-//        // arrange
-//        String regMessage = "/report01 /photo";
-//        Date dateSendMessage = new Date(1600000000L * 1000);
-//        Update update = mock(Update.class);
-//        Message message = mock(Message.class);
-//        Chat chat = mock(Chat.class);
-//        PhotoSize[] photoSizes = new PhotoSize[]{mock(PhotoSize.class), mock(PhotoSize.class)};
-//        when(update.message()).thenReturn(message);
-//        when(message.caption()).thenReturn(regMessage);
-//        when(message.photo()).thenReturn(photoSizes);
-//        when(message.chat()).thenReturn(chat);
-//        when(message.date()).thenReturn(1600000000);
-//        when(photoSizes[1].fileId()).thenReturn("1");
-//        File file = new File();
-//        file.filePath();
-//        toString().intern();
-//        doAnswer(invocation -> {
-//            Object arg = invocation.getArgument(0);
-//            // выполнение необходимых действий с аргументом метода
-//            return null; // метод ничего не возвращает, поэтому возвращаем null
-//        }).when(telegramBot).execute(any(GetFile.class));
-//        //doNothing().when(telegramBot).execute(any(GetFile.class));
-//        GetFileResponse getFileResponse = mock(GetFileResponse.class);
-//        when(telegramBot.execute(any(GetFile.class))).thenReturn(getFileResponse);
-//        when(getFileResponse.file()).thenReturn(file);
-//        byte[] fileContent = "Test content".getBytes();
-//        when(telegramBot.getFileContent(any(File.class))).thenReturn(fileContent);
-//        SendMessage sendMessage = new SendMessage(1L, "Отчет успешно принят");
-//       // when(telegramBot.execute(any(SendMessage.class))).then((Answer<?>) sendMessage);
-//        when(telegramBot.execute(any(SendMessage.class))).thenAnswer(invocation -> sendMessage);
-//
-//        telegramBotUpdatesListener.getReport(update);
-//
-//
-//        verify(update, times(2)).message();
-//        verify(message, times(1)).caption();
-//        verify(message, times(2)).photo();
-//        verify(message, times(1)).chat();
-//        verify(message, times(1)).date();
-//        verify(photoSizes[1], times(1)).fileId();
-//        verify(reportService).uploadReport(anyLong(), any(byte[].class), any(File.class), anyString(),
+    @Test
+    public void testGetReport() throws IOException {
+        // arrange
+        String regMessage = "/report01 /photo";
+        Date dateSendMessage = new Date(1600000000L * 1000);
+        Update update = mock(Update.class);
+        Message message = mock(Message.class);
+        Chat chat = mock(Chat.class);
+        PhotoSize[] photoSizes = new PhotoSize[]{mock(PhotoSize.class), mock(PhotoSize.class)};
+        when(update.message()).thenReturn(message);
+        when(message.caption()).thenReturn(regMessage);
+        when(message.photo()).thenReturn(photoSizes);
+        when(message.chat()).thenReturn(chat);
+        when(message.date()).thenReturn(1600000000);
+        when(photoSizes[1].fileId()).thenReturn("1");
+        File file = new File();
+        Path path = Path.of("ghhhh");
+        toString().intern();
+        doAnswer(invocation -> {
+            Object arg = invocation.getArgument(0);
+            // выполнение необходимых действий с аргументом метода
+            return null; // метод ничего не возвращает, поэтому возвращаем null
+        }).when(telegramBot).execute(any(GetFile.class));
+        GetFileResponse getFileResponse = mock(GetFileResponse.class);
+        when(telegramBot.execute(any(GetFile.class))).thenReturn(getFileResponse);
+        when(getFileResponse.file()).thenReturn(file);
+        File file1 = mock(File.class);
+        when(file1.filePath()).thenReturn(String.valueOf(path));
+        byte[] fileContent = "Test content".getBytes();
+        when(telegramBot.getFileContent(any(File.class))).thenReturn(fileContent);
+        SendMessage sendMessage = new SendMessage(1L, "Отчет успешно принят");
+        when(telegramBot.execute(any(SendMessage.class))).thenAnswer(invocation -> sendMessage);
+//        doNothing().when(reportService).uploadReport(anyLong(), any(byte[].class), any(File.class), anyString(),
 //                anyString(), any(Date.class), anyLong(), anyInt());
-//        verify(telegramBot).getFileContent(any(File.class));
-//        verify(telegramBot).execute(any(GetFile.class));
-//        verify(telegramBot).execute(any(SendMessage.class));
-//    }
+        verify(reportService).uploadReport(anyLong(), any(byte[].class), any(File.class), anyString(),
+                anyString(), any(Date.class), anyLong(), anyInt());
+        telegramBotUpdatesListener.getReport(update);
+
+
+        verify(update, times(2)).message();
+        verify(message, times(1)).caption();
+        verify(message, times(2)).photo();
+        verify(message, times(1)).chat();
+        verify(message, times(1)).date();
+        when(photoSizes[1]).thenReturn(mock(PhotoSize.class));
+        when(photoSizes[1].fileId()).thenReturn("1");
+        verify(reportService).uploadReport(anyLong(), any(byte[].class), any(File.class), anyString(),
+                anyString(), any(Date.class), anyLong(), anyInt());
+        verify(telegramBot).getFileContent(any(File.class));
+        verify(telegramBot).execute(any(GetFile.class));
+        verify(telegramBot).execute(any(SendMessage.class));
+    }
 
 
 }

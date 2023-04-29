@@ -15,12 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.jdbc.datasource.init.DatabasePopulatorUtils.execute;
 
 @Service
 public class TelegramBotChatVolunteer implements UpdatesListener {
@@ -51,13 +46,17 @@ public class TelegramBotChatVolunteer implements UpdatesListener {
     public TelegramBotChatVolunteer(TelegramBot telegramBot,
                                     ShelterRepository shelterRepository,
                                     LocationMapRepository locationMapRepository,
-                                    DocumentDogRepository documentDogRepository) {
+                                    DocumentDogRepository documentDogRepository, VolunteerService volunteerService) {
         this.telegramBot = telegramBot;
         this.shelterRepository = shelterRepository;
         this.locationMapRepository = locationMapRepository;
         this.documentDogRepository = documentDogRepository;
-
+        this.volunteerService = volunteerService;
     }
+//    public TelegramBotChatVolunteer(TelegramBot telegramBot, VolunteerService volunteerService) {
+//        this.telegramBot = telegramBot;
+//        this.volunteerService = volunteerService;
+//    }
 
     public void sendMessage(long chatId, String text) {
         com.pengrad.telegrambot.request.SendMessage message = new com.pengrad.telegrambot.request.SendMessage(chatId, text);
